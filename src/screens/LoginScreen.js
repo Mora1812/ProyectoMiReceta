@@ -1,5 +1,5 @@
 // src/screens/LoginScreen.js
-// Pantalla de Login - ESTILOS 100% IDÉNTICOS al prototipo Figma
+// Pantalla "Inicia seccion" - ESTILOS EXACTOS del Figma
 import React, { useState } from 'react';
 import {
     View,
@@ -15,15 +15,15 @@ import {
 } from 'react-native';
 import { validateUser } from '../data/UsersDB';
 
-// COLORES EXACTOS del prototipo Figma
+// COLORES EXACTOS del Figma
 const Colors = {
-    background: '#452121',  // MARRÓN - Fondo
-    cardBg: '#F5E6D3',      // Beige/crema - Card
-    inputBg: '#452121',     // Marrón - Inputs
-    textLight: '#F5E6D3',   // Texto claro
+    background: '#452121',  // Marrón fondo
+    cardBg: '#F7F7F1',      // Blanco/beige claro - CARD
+    inputBg: '#452121',     // Marrón inputs
+    titleGold: '#D4AD58',   // Dorado título
     textDark: '#452121',    // Texto oscuro
-    textMuted: '#888888',   // Placeholder
-    accent: '#C4A35A',      // Dorado para links
+    textLight: '#F5E6D3',   // Texto claro
+    textMuted: '#888888',
 };
 
 export default function LoginScreen({ navigation }) {
@@ -60,26 +60,20 @@ export default function LoginScreen({ navigation }) {
                     contentContainerStyle={styles.scrollContent}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* Logo circular con imagen de cubiertos */}
+                    {/* Logo MiReceta */}
                     <View style={styles.logoContainer}>
-                        <View style={styles.logo}>
-                            <Text style={styles.logoEmoji}>🍳</Text>
-                            <Text style={styles.logoText}>MiReceta</Text>
-                        </View>
+                        <Image
+                            source={require('../../assets/logo.png')}
+                            style={styles.logoImage}
+                            resizeMode="contain"
+                        />
                     </View>
 
-                    {/* Título */}
+                    {/* Título - Fuente JejuHallasan, 24px, color #D4AD58 */}
                     <Text style={styles.mainTitle}>Inicia seccion</Text>
 
-                    {/* Card beige */}
+                    {/* Card - Color #F7F7F1, borderRadius 26 */}
                     <View style={styles.card}>
-                        {/* Icono Google */}
-                        <View style={styles.googleContainer}>
-                            <Text style={styles.googleIcon}>G</Text>
-                        </View>
-
-                        <Text style={styles.orText}>O</Text>
-
                         <Text style={styles.label}>Correo electronico</Text>
                         <TextInput
                             style={styles.input}
@@ -99,12 +93,19 @@ export default function LoginScreen({ navigation }) {
                             onChangeText={setPassword}
                         />
 
+                        {/* Iniciar Sección - centrado */}
                         <Pressable onPress={handleLogin}>
+                            <Text style={styles.iniciarSeccion}>Iniciar Sección</Text>
+                        </Pressable>
+
+                        {/* ¿olvidaste tu contraseña? - centrado */}
+                        <Pressable>
                             <Text style={styles.forgotText}>¿olvidaste tu contraseña?</Text>
                         </Pressable>
 
+                        {/* crear cuenta - alineado a la izquierda */}
                         <Pressable onPress={() => navigation.navigate('Register')}>
-                            <Text style={styles.createAccount}>crear cuenta</Text>
+                            <Text style={styles.crearCuenta}>crear cuenta</Text>
                         </Pressable>
                     </View>
                 </ScrollView>
@@ -123,92 +124,66 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         flexGrow: 1,
-        paddingHorizontal: 24,
-        paddingVertical: 40,
+        paddingHorizontal: 20,
+        paddingTop: 50,
     },
     logoContainer: {
         alignItems: 'center',
-        marginBottom: 20,
-        marginTop: 20,
+        marginBottom: 24,
     },
-    logo: {
-        width: 90,
-        height: 90,
-        borderRadius: 45,
-        backgroundColor: Colors.cardBg,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 3,
-        borderColor: '#FFFFFF',
-    },
-    logoEmoji: {
-        fontSize: 32,
-    },
-    logoText: {
-        fontSize: 12,
-        color: Colors.textDark,
-        fontWeight: '600',
-        marginTop: -2,
+    logoImage: {
+        width: 110,
+        height: 110,
+        borderRadius: 55,
     },
     mainTitle: {
         fontSize: 24,
-        fontWeight: 'bold',
-        color: Colors.accent,
+        fontWeight: '400',
+        color: Colors.titleGold,
         textAlign: 'center',
-        marginBottom: 24,
+        marginBottom: 28,
         fontStyle: 'italic',
+        fontFamily: Platform.OS === 'ios' ? 'System' : 'serif',
     },
     card: {
         backgroundColor: Colors.cardBg,
-        borderRadius: 30,
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
-        padding: 24,
-        paddingTop: 30,
-        flex: 1,
-    },
-    googleContainer: {
-        alignItems: 'center',
-        marginBottom: 16,
-    },
-    googleIcon: {
-        fontSize: 28,
-        color: '#4285F4',
-        fontWeight: 'bold',
-    },
-    orText: {
-        textAlign: 'center',
-        fontSize: 16,
-        color: Colors.textDark,
-        marginBottom: 20,
+        borderRadius: 26,
+        paddingHorizontal: 28,
+        paddingVertical: 28,
     },
     label: {
         color: Colors.textDark,
         fontSize: 16,
         fontWeight: 'bold',
-        marginBottom: 10,
-        marginTop: 8,
+        marginBottom: 12,
+        marginTop: 16,
     },
     input: {
         backgroundColor: Colors.inputBg,
-        borderRadius: 25,
+        borderRadius: 30,
         paddingHorizontal: 20,
-        paddingVertical: 16,
+        paddingVertical: 18,
         fontSize: 14,
         color: Colors.textLight,
-        marginBottom: 12,
+    },
+    iniciarSeccion: {
+        color: Colors.textDark,
+        fontSize: 16,
+        textAlign: 'center',
+        marginTop: 32,
+        fontWeight: '500',
     },
     forgotText: {
         color: Colors.textMuted,
         fontSize: 14,
         textAlign: 'center',
-        marginTop: 16,
+        marginTop: 20,
     },
-    createAccount: {
+    crearCuenta: {
         color: Colors.textDark,
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: 'bold',
-        textAlign: 'center',
+        textAlign: 'left',
         marginTop: 20,
     },
 });

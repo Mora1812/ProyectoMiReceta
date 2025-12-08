@@ -1,74 +1,85 @@
+// ==================================================
 // src/screens/DeleteRecipeScreen.js
-// Pantalla "Eliminar Receta" - ESTILOS 100% IDÉNTICOS al prototipo Figma
-import React, { useState, useEffect } from 'react';
+// Pantalla para confirmar eliminación de receta
+// Estilo basado en el Figma
+// ==================================================
+
+import React from 'react';
 import {
     View,
     Text,
     StyleSheet,
     Pressable,
-    SafeAreaView
+    SafeAreaView,
+    Image,
+    Alert
 } from 'react-native';
-import { getRecipeById, deleteRecipe } from '../data/RecipesDB';
+import { deleteRecipe } from '../data/RecipesDB';
 
-// COLORES EXACTOS del prototipo Figma
+// ==================================================
+// COLORES
+// ==================================================
 const Colors = {
-    background: '#452121',  // MARRÓN - Fondo
-    cardBg: '#F5E6D3',      // Beige
-    inputBg: '#452121',     // Marrón
-    textLight: '#F5E6D3',
-    textDark: '#452121',
+    background: '#452121',  // Marrón oscuro
+    cardBg: '#F7F7F1',      // Beige claro
+    titleGold: '#D4AD58',   // Dorado
+    textDark: '#452121',    // Texto oscuro
+    buttonGold: '#D4AD58',  // Botón dorado
 };
 
+// ==================================================
+// COMPONENTE PRINCIPAL
+// ==================================================
 export default function DeleteRecipeScreen({ navigation, route }) {
+    // Obtener el ID de la receta a eliminar
     const { recipeId } = route.params;
-    const [recipe, setRecipe] = useState(null);
 
-    useEffect(() => {
-        const recipeData = getRecipeById(recipeId);
-        setRecipe(recipeData);
-    }, []);
-
+    // Función para eliminar la receta
     const handleDelete = () => {
         deleteRecipe(recipeId);
-        navigation.navigate('MyRecipes');
+        Alert.alert('Receta eliminada', 'La receta fue eliminada correctamente', [
+            { text: 'OK', onPress: () => navigation.navigate('Private') }
+        ]);
     };
-
-    if (!recipe) {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.loadingText}>Cargando...</Text>
-            </View>
-        );
-    }
 
     return (
         <View style={styles.container}>
             <SafeAreaView style={styles.safeArea}>
-                {/* Logo */}
+
+                {/* ========== LOGO (volver atrás) ========== */}
                 <View style={styles.logoContainer}>
-                    <View style={styles.logo}>
-                        <Text style={styles.logoEmoji}>🍳</Text>
-                    </View>
-                </View>
-
-                {/* Card beige */}
-                <View style={styles.card}>
-                    <Text style={styles.title}>Eliminar Receta</Text>
-
-                    <View style={styles.messageBox}>
-                        <Text style={styles.messageText}>¿Seguro que quieres</Text>
-                        <Text style={styles.messageText}>eliminar esta receta?</Text>
-                    </View>
-
-                    <Pressable style={styles.button} onPress={handleDelete}>
-                        <Text style={styles.buttonText}>Eliminar Receta</Text>
+                    <Pressable onPress={() => navigation.goBack()}>
+                        <Image
+                            source={require('../../assets/logo.png')}
+                            style={styles.logo}
+                            resizeMode="contain"
+                        />
                     </Pressable>
                 </View>
+
+                {/* ========== TÍTULO ========== */}
+                <Text style={styles.title}>Eliminar Receta</Text>
+
+                {/* ========== CARD DE CONFIRMACIÓN ========== */}
+                <View style={styles.card}>
+                    <Text style={styles.question}>
+                        ¿Seguro que quieres{'\n'}eliminar esta receta?
+                    </Text>
+
+                    {/* Botón Eliminar */}
+                    <Pressable style={styles.deleteButton} onPress={handleDelete}>
+                        <Text style={styles.deleteButtonText}>Eliminar Receta</Text>
+                    </Pressable>
+                </View>
+
             </SafeAreaView>
         </View>
     );
 }
 
+// ==================================================
+// ESTILOS
+// ==================================================
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -76,69 +87,58 @@ const styles = StyleSheet.create({
     },
     safeArea: {
         flex: 1,
-    },
-    loadingText: {
-        color: Colors.cardBg,
-        fontSize: 16,
-        textAlign: 'center',
-        marginTop: 100,
-    },
-    logoContainer: {
         alignItems: 'center',
-        paddingTop: 40,
-        paddingBottom: 30,
+    },
+
+    // ----- LOGO -----
+    logoContainer: {
+        marginTop: 20,
+        marginBottom: 20,
     },
     logo: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: Colors.cardBg,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 3,
-        borderColor: '#FFFFFF',
+        width: 80,
+        height: 80,
+        borderRadius: 40,
     },
-    logoEmoji: {
-        fontSize: 30,
+
+    // ----- TÍTULO -----
+    title: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        fontStyle: 'italic',
+        color: '#FFFFFF',  // Blanco
+        marginBottom: 40,
     },
+
+    // ----- CARD -----
     card: {
         backgroundColor: Colors.cardBg,
-        marginHorizontal: 24,
         borderRadius: 20,
-        padding: 24,
+        padding: 30,
+        marginHorizontal: 30,
         alignItems: 'center',
+        width: '80%',
     },
-    title: {
-        fontSize: 20,
-        fontWeight: 'bold',
+    question: {
+        fontSize: 16,
         color: Colors.textDark,
-        marginBottom: 20,
-    },
-    messageBox: {
-        backgroundColor: Colors.inputBg,
-        borderRadius: 20,
-        paddingVertical: 20,
-        paddingHorizontal: 30,
-        width: '100%',
-        alignItems: 'center',
-        marginBottom: 20,
-    },
-    messageText: {
-        fontSize: 15,
-        color: Colors.textLight,
         textAlign: 'center',
+        marginBottom: 24,
+        lineHeight: 24,
     },
-    button: {
-        backgroundColor: Colors.inputBg,
+
+    // ----- BOTÓN ELIMINAR -----
+    deleteButton: {
+        backgroundColor: Colors.buttonGold,
         borderRadius: 25,
         paddingVertical: 14,
-        paddingHorizontal: 30,
+        paddingHorizontal: 40,
         width: '100%',
         alignItems: 'center',
     },
-    buttonText: {
-        color: Colors.textLight,
-        fontSize: 15,
+    deleteButtonText: {
+        color: Colors.textDark,
+        fontSize: 16,
         fontWeight: 'bold',
     },
 });

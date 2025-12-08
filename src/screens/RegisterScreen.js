@@ -1,5 +1,5 @@
 // src/screens/RegisterScreen.js
-// Pantalla de Registro - ESTILOS 100% IDÉNTICOS al prototipo Figma
+// Pantalla "Crear seccion" - ESTILOS EXACTOS del Figma
 import React, { useState } from 'react';
 import {
     View,
@@ -10,19 +10,20 @@ import {
     Pressable,
     KeyboardAvoidingView,
     Platform,
-    ScrollView
+    ScrollView,
+    Image
 } from 'react-native';
 import { saveUser } from '../data/UsersDB';
 
-// COLORES EXACTOS del prototipo Figma
+// COLORES EXACTOS del Figma
 const Colors = {
-    background: '#452121',  // MARRÓN - Fondo
-    cardBg: '#F5E6D3',      // Beige/crema - Card
-    inputBg: '#452121',     // Marrón - Inputs
-    textLight: '#F5E6D3',   // Texto claro
+    background: '#452121',  // Marrón fondo
+    cardBg: '#F7F7F1',      // Blanco/beige claro - CARD
+    inputBg: '#452121',     // Marrón inputs
+    titleGold: '#D4AD58',   // Dorado título
     textDark: '#452121',    // Texto oscuro
+    textLight: '#F5E6D3',   // Texto claro
     textMuted: '#888888',
-    accent: '#C4A35A',
 };
 
 export default function RegisterScreen({ navigation }) {
@@ -44,7 +45,7 @@ export default function RegisterScreen({ navigation }) {
         }
 
         Alert.alert('Éxito', 'Cuenta creada correctamente', [
-            { text: 'Ir a Login', onPress: () => navigation.navigate('Login') },
+            { text: 'Iniciar Sección', onPress: () => navigation.navigate('Login') },
         ]);
     };
 
@@ -58,20 +59,21 @@ export default function RegisterScreen({ navigation }) {
                     contentContainerStyle={styles.scrollContent}
                     showsVerticalScrollIndicator={false}
                 >
-                    {/* Logo */}
+                    {/* Logo MiReceta */}
                     <View style={styles.logoContainer}>
-                        <View style={styles.logo}>
-                            <Text style={styles.logoEmoji}>🍳</Text>
-                            <Text style={styles.logoText}>MiReceta</Text>
-                        </View>
+                        <Image
+                            source={require('../../assets/logo.png')}
+                            style={styles.logoImage}
+                            resizeMode="contain"
+                        />
                     </View>
 
-                    {/* Título */}
-                    <Text style={styles.mainTitle}>Crear cuenta</Text>
+                    {/* Título - color #D4AD58 */}
+                    <Text style={styles.mainTitle}>Crear seccion</Text>
 
-                    {/* Card beige */}
+                    {/* Card - Color #F7F7F1, borderRadius 26 */}
                     <View style={styles.card}>
-                        <Text style={styles.label}>Nombre</Text>
+                        <Text style={styles.label}>Nombre de Usuario</Text>
                         <TextInput
                             style={styles.input}
                             placeholderTextColor={Colors.textMuted}
@@ -98,12 +100,17 @@ export default function RegisterScreen({ navigation }) {
                             onChangeText={setPassword}
                         />
 
-                        <Pressable style={styles.registerButton} onPress={handleRegister}>
-                            <Text style={styles.registerButtonText}>Registrarme</Text>
+                        {/* crear cuenta - centrado */}
+                        <Pressable onPress={handleRegister}>
+                            <Text style={styles.crearCuenta}>crear cuenta</Text>
                         </Pressable>
 
+                        {/* O - centrado */}
+                        <Text style={styles.orText}>O</Text>
+
+                        {/* Iniciar Sección - centrado */}
                         <Pressable onPress={() => navigation.navigate('Login')}>
-                            <Text style={styles.loginLink}>¿Ya tienes cuenta? Inicia sesión</Text>
+                            <Text style={styles.iniciarSeccion}>Iniciar Sección</Text>
                         </Pressable>
                     </View>
                 </ScrollView>
@@ -122,80 +129,66 @@ const styles = StyleSheet.create({
     },
     scrollContent: {
         flexGrow: 1,
-        paddingHorizontal: 24,
-        paddingVertical: 40,
+        paddingHorizontal: 20,
+        paddingTop: 50,
     },
     logoContainer: {
         alignItems: 'center',
-        marginBottom: 20,
-        marginTop: 20,
+        marginBottom: 24,
     },
-    logo: {
-        width: 90,
-        height: 90,
-        borderRadius: 45,
-        backgroundColor: Colors.cardBg,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 3,
-        borderColor: '#FFFFFF',
-    },
-    logoEmoji: {
-        fontSize: 32,
-    },
-    logoText: {
-        fontSize: 12,
-        color: Colors.textDark,
-        fontWeight: '600',
-        marginTop: -2,
+    logoImage: {
+        width: 110,
+        height: 110,
+        borderRadius: 55,
     },
     mainTitle: {
         fontSize: 24,
-        fontWeight: 'bold',
-        color: Colors.accent,
+        fontWeight: '400',
+        color: Colors.titleGold,
         textAlign: 'center',
-        marginBottom: 24,
+        marginBottom: 28,
         fontStyle: 'italic',
+        fontFamily: Platform.OS === 'ios' ? 'System' : 'serif',
     },
     card: {
         backgroundColor: Colors.cardBg,
-        borderRadius: 30,
-        padding: 24,
-        paddingTop: 30,
-        flex: 1,
+        borderRadius: 26,
+        paddingHorizontal: 28,
+        paddingVertical: 28,
     },
     label: {
         color: Colors.textDark,
         fontSize: 16,
         fontWeight: 'bold',
-        marginBottom: 10,
-        marginTop: 8,
+        marginBottom: 12,
+        marginTop: 16,
     },
     input: {
         backgroundColor: Colors.inputBg,
-        borderRadius: 25,
+        borderRadius: 30,
         paddingHorizontal: 20,
-        paddingVertical: 16,
+        paddingVertical: 18,
         fontSize: 14,
         color: Colors.textLight,
-        marginBottom: 12,
     },
-    registerButton: {
-        backgroundColor: Colors.inputBg,
-        borderRadius: 25,
-        paddingVertical: 16,
-        alignItems: 'center',
-        marginTop: 20,
-    },
-    registerButtonText: {
-        color: Colors.textLight,
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    loginLink: {
+    crearCuenta: {
         color: Colors.textDark,
         fontSize: 14,
         textAlign: 'center',
-        marginTop: 20,
+        marginTop: 28,
+    },
+    orText: {
+        color: Colors.textDark,
+        fontSize: 16,
+        textAlign: 'center',
+        marginTop: 12,
+        fontWeight: 'bold',
+    },
+    iniciarSeccion: {
+        color: Colors.textDark,
+        fontSize: 14,
+        textAlign: 'center',
+        marginTop: 12,
+        fontWeight: '500',
     },
 });

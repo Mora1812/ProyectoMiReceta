@@ -1,10 +1,6 @@
-// ==================================================
-// src/screens/HomeScreen.js
-// Vista Principal Privada (después de login)
-// Basado en el estilo del profesor - WelcomeScreen.js
-// ==================================================
-
-import React, { useState, useEffect } from 'react';
+// src/screens/WelcomeScreen.js
+// Vista Pública - ESTILOS EXACTOS del Figma
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -15,23 +11,18 @@ import {
     Image,
     SafeAreaView
 } from 'react-native';
-import { getAllRecipes } from '../data/RecipesDB';
 
-// ==================================================
-// COLORES - Paleta de colores del Figma
-// ==================================================
+// COLORES EXACTOS del Figma
 const Colors = {
-    background: '#452121',  // Marrón oscuro - Fondo principal
-    cardBg: '#F7F7F1',      // Beige claro - Fondo de cards
-    inputBg: '#F7F7F1',     // Beige claro - Input de búsqueda
-    titleGold: '#D4AD58',   // Dorado - Títulos y acentos
-    textDark: '#452121',    // Marrón oscuro - Texto
-    textMuted: '#888888',   // Gris - Placeholder
+    background: '#452121',  // Marrón fondo
+    cardBg: '#F7F7F1',      // Blanco/beige claro
+    inputBg: '#F7F7F1',     // Input beige
+    titleGold: '#D4AD58',   // Dorado
+    textDark: '#452121',    // Texto oscuro
+    textMuted: '#888888',
 };
 
-// ==================================================
-// DATOS - Categorías de recetas (círculos)
-// ==================================================
+// Categorías de recetas
 const categories = [
     { id: 1, name: 'Recetas\ncon pollo', image: require('../../assets/pollo.png') },
     { id: 2, name: 'Recetas con\ncarne de res', image: require('../../assets/carne_res.png') },
@@ -39,9 +30,7 @@ const categories = [
     { id: 4, name: 'Recetas para\npostres', image: require('../../assets/postres.png') },
 ];
 
-// ==================================================
-// DATOS - Recetas destacadas (cards principales)
-// ==================================================
+// Recetas de ejemplo
 const featuredRecipes = [
     {
         id: 1,
@@ -57,77 +46,17 @@ const featuredRecipes = [
     },
 ];
 
-// ==================================================
-// COMPONENTE PRINCIPAL - HomeScreen
-// ==================================================
-export default function HomeScreen({ navigation, route }) {
-    // Obtener datos del usuario desde la navegación
-    const { userName, userEmail } = route.params || { userName: 'Usuario', userEmail: '' };
+export default function WelcomeScreen({ navigation }) {
+    const [searchQuery, setSearchQuery] = useState('');
+    const [activeTab, setActiveTab] = useState('Recetas');
 
-    // Estados del componente
-    const [searchQuery, setSearchQuery] = useState('');    // Búsqueda
-    const [activeTab, setActiveTab] = useState('Recetas'); // Tab activo
-    const [recipes, setRecipes] = useState(featuredRecipes); // Recetas a mostrar
-
-    // Cargar recetas de la base de datos
-    useEffect(() => {
-        loadRecipes();
-    }, []);
-
-    // Recargar cuando la pantalla recibe foco
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            loadRecipes();
-        });
-        return unsubscribe;
-    }, [navigation]);
-
-    // Mapa de imágenes de assets
-    const assetImages = {
-        'bandeja_paisa': require('../../assets/bandeja_paisa.png'),
-        'tacos': require('../../assets/tacos.png'),
-        'postres': require('../../assets/postres.png'),
-        'pollo': require('../../assets/pollo.png'),
-        'carne_res': require('../../assets/carne_res.png'),
-        'cerdo': require('../../assets/cerdo.png'),
-        'ajiaco': require('../../assets/pollo.png'),  // Ajiaco usa imagen de pollo
-    };
-
-    // Imagen por defecto si no existe
-    const defaultImage = require('../../assets/postres.png');
-
-    // Función para cargar recetas
-    const loadRecipes = () => {
-        const allRecipes = getAllRecipes();
-        if (allRecipes.length > 0) {
-            const mapped = allRecipes.map(r => ({
-                id: r.id,
-                name: r.titulo,
-                // Convertir nombre de imagen a require() o usar imagen por defecto
-                image: assetImages[r.imagen] || defaultImage,
-                rating: r.rating || 3
-            }));
-            setRecipes(mapped);
-        } else {
-            setRecipes(featuredRecipes);
-        }
-    };
-
-    // Filtrar recetas según búsqueda
-    const filteredRecipes = recipes.filter(recipe =>
-        recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-
-    // Tabs de navegación
     const tabs = ['Recetas', 'Calendario', 'Libros', 'Blog'];
 
     return (
         <View style={styles.container}>
             <SafeAreaView style={styles.safeArea}>
                 <ScrollView showsVerticalScrollIndicator={false}>
-
-                    {/* ========== HEADER ========== */}
-                    {/* Logo a la izquierda, botón Perfil a la derecha */}
+                    {/* Header: Logo + Login */}
                     <View style={styles.header}>
                         <Image
                             source={require('../../assets/logo.png')}
@@ -135,14 +64,14 @@ export default function HomeScreen({ navigation, route }) {
                             resizeMode="contain"
                         />
                         <Pressable
-                            style={styles.perfilButton}
-                            onPress={() => navigation.navigate('Profile', { userName, userEmail })}
+                            style={styles.loginButton}
+                            onPress={() => navigation.navigate('Login')}
                         >
-                            <Text style={styles.perfilText}>perfil</Text>
+                            <Text style={styles.loginText}>Login</Text>
                         </Pressable>
                     </View>
 
-                    {/* ========== BARRA DE BÚSQUEDA ========== */}
+                    {/* Barra de búsqueda */}
                     <View style={styles.searchContainer}>
                         <TextInput
                             style={styles.searchInput}
@@ -153,8 +82,7 @@ export default function HomeScreen({ navigation, route }) {
                         />
                     </View>
 
-                    {/* ========== TABS DE NAVEGACIÓN ========== */}
-                    {/* Recetas, Calendario, Libros, Blog */}
+                    {/* Tabs: Recetas, Calendario, Libros, Blog */}
                     <View style={styles.tabsContainer}>
                         {tabs.map((tab) => (
                             <Pressable
@@ -169,8 +97,7 @@ export default function HomeScreen({ navigation, route }) {
                         ))}
                     </View>
 
-                    {/* ========== CATEGORÍAS (CÍRCULOS) ========== */}
-                    {/* Pollo, Res, Cerdo, Postres */}
+                    {/* Categorías con círculos */}
                     <View style={styles.categoriesContainer}>
                         {categories.map((cat) => (
                             <View key={cat.id} style={styles.categoryItem}>
@@ -182,24 +109,17 @@ export default function HomeScreen({ navigation, route }) {
                         ))}
                     </View>
 
-                    {/* ========== RECETAS DESTACADAS ========== */}
-                    {/* Cards individuales con borde café */}
-                    <View style={styles.recipesContainer}>
-                        {filteredRecipes.map((recipe) => (
+                    {/* Card de recetas destacadas */}
+                    <View style={styles.recipesCard}>
+                        {featuredRecipes.map((recipe) => (
                             <Pressable
                                 key={recipe.id}
-                                style={styles.recipeCard}
-                                onPress={() => navigation.navigate('RecipeDetail', { recipeId: recipe.id, userEmail })}
+                                style={styles.recipeItem}
+                                onPress={() => navigation.navigate('RecipeDetail', { recipeId: recipe.id })}
                             >
-                                {/* Imagen de la receta */}
                                 <View style={styles.recipeImageContainer}>
-                                    <Image
-                                        source={typeof recipe.image === 'string' ? { uri: recipe.image } : recipe.image}
-                                        style={styles.recipeImage}
-                                    />
+                                    <Image source={recipe.image} style={styles.recipeImage} />
                                 </View>
-
-                                {/* Info: Nombre + Estrellas */}
                                 <View style={styles.recipeInfo}>
                                     <Text style={styles.recipeName}>{recipe.name}</Text>
                                     <View style={styles.ratingContainer}>
@@ -213,18 +133,13 @@ export default function HomeScreen({ navigation, route }) {
                             </Pressable>
                         ))}
                     </View>
-
                 </ScrollView>
             </SafeAreaView>
         </View>
     );
 }
 
-// ==================================================
-// ESTILOS - StyleSheet
-// ==================================================
 const styles = StyleSheet.create({
-    // ----- CONTENEDOR PRINCIPAL -----
     container: {
         flex: 1,
         backgroundColor: Colors.background,
@@ -232,8 +147,6 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
     },
-
-    // ----- HEADER -----
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -247,20 +160,18 @@ const styles = StyleSheet.create({
         height: 70,
         borderRadius: 35,
     },
-    perfilButton: {
+    loginButton: {
         backgroundColor: '#682929',
         paddingHorizontal: 28,
         paddingVertical: 12,
         borderRadius: 25,
     },
-    perfilText: {
+    loginText: {
         color: Colors.titleGold,
         fontSize: 16,
         fontWeight: '600',
         fontStyle: 'italic',
     },
-
-    // ----- BARRA DE BÚSQUEDA -----
     searchContainer: {
         marginHorizontal: 20,
         marginBottom: 16,
@@ -275,8 +186,6 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: Colors.textDark,
     },
-
-    // ----- TABS -----
     tabsContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
@@ -301,8 +210,6 @@ const styles = StyleSheet.create({
     tabTextActive: {
         color: Colors.titleGold,
     },
-
-    // ----- CATEGORÍAS -----
     categoriesContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -326,35 +233,28 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     categoryName: {
-        color: Colors.titleGold,  // Texto dorado
+        color: Colors.cardBg,
         fontSize: 10,
         textAlign: 'center',
         lineHeight: 14,
     },
-
-    // ----- CONTENEDOR DE RECETAS -----
-    recipesContainer: {
-        // Sin fondo - las tarjetas van directamente sobre el fondo oscuro
+    recipesCard: {
+        backgroundColor: Colors.cardBg,
         marginHorizontal: 20,
+        borderRadius: 26,
+        padding: 16,
         marginBottom: 30,
     },
-
-    // ----- CARD DE RECETA (bloque individual) -----
-    recipeCard: {
-        backgroundColor: '#F7F7F1',  // Beige claro
-        borderRadius: 16,
-        borderWidth: 3,              // Borde café
-        borderColor: '#452121',      // Marrón oscuro
-        marginBottom: 20,
-        padding: 10,                 // Padding interno
+    recipeItem: {
+        marginBottom: 16,
     },
     recipeImageContainer: {
         width: '100%',
         height: 140,
-        borderRadius: 12,
-        borderWidth: 3,              // Borde marrón en la imagen
-        borderColor: '#452121',
+        borderRadius: 16,
         overflow: 'hidden',
+        borderWidth: 2,
+        borderColor: Colors.textDark,
     },
     recipeImage: {
         width: '100%',
@@ -364,31 +264,28 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingTop: 10,
+        marginTop: 10,
         paddingHorizontal: 4,
     },
     recipeName: {
-        color: '#000000',  // Negro
-        fontSize: 14,
+        color: Colors.textDark,
+        fontSize: 16,
         fontWeight: 'bold',
-        fontStyle: 'italic',
     },
-
-    // ----- ESTRELLAS DE RATING -----
     ratingContainer: {
         flexDirection: 'row',
         gap: 4,
     },
     starCircle: {
-        width: 22,
-        height: 22,
-        borderRadius: 11,
+        width: 20,
+        height: 20,
+        borderRadius: 10,
         backgroundColor: Colors.titleGold,
         justifyContent: 'center',
         alignItems: 'center',
     },
     star: {
         color: '#FFFFFF',
-        fontSize: 14,
+        fontSize: 12,
     },
 });

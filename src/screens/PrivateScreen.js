@@ -1,140 +1,197 @@
+// ==================================================
 // src/screens/PrivateScreen.js
-// Pantalla "Mi Perfil" - ESTILOS 100% IDÉNTICOS al prototipo Figma
+// Vista de Perfil de Usuario
+// Basado en el estilo del profesor - WelcomeScreen.js
+// ==================================================
+
 import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
     StyleSheet,
     Pressable,
+    ScrollView,
     Image,
-    SafeAreaView,
-    Alert,
-    ScrollView
+    SafeAreaView
 } from 'react-native';
-import { getAllRecipes } from '../data/RecipesDB';
+import { getRecipesByUser } from '../data/RecipesDB';
 
-// COLORES EXACTOS del prototipo Figma
+// ==================================================
+// COLORES - Paleta de colores del Figma
+// ==================================================
 const Colors = {
-    background: '#452121',  // MARRÓN - Fondo
-    cardBg: '#F5E6D3',      // Beige
-    textDark: '#452121',
-    accent: '#C4A35A',
+    background: '#452121',  // Marrón oscuro - Fondo principal
+    cardBg: '#F7F7F1',      // Beige claro - Fondo de cards
+    titleGold: '#D4AD58',   // Dorado - Títulos y acentos
+    textDark: '#452121',    // Marrón oscuro - Texto
 };
 
-export default function PrivateScreen({ navigation, route }) {
-    const { userName } = route.params || { userName: 'Jhullians forero' };
-    const [userRecipes, setUserRecipes] = useState([]);
-    const [activeTab, setActiveTab] = useState('favoritas');
+// ==================================================
+// DATOS - Recetas de ejemplo (si el usuario no tiene)
+// ==================================================
+const defaultRecipes = [
+    {
+        id: 1,
+        titulo: 'Bandeja paisa',
+        imagen: require('../../assets/bandeja_paisa.png'),
+        modo: 'Medio',
+        rating: 5,
+    },
+    {
+        id: 2,
+        titulo: 'Tacos mexicanos',
+        imagen: require('../../assets/tacos.png'),
+        modo: 'Fácil',
+        rating: 3,
+    },
+];
 
+// ==================================================
+// COMPONENTE PRINCIPAL - PrivateScreen
+// ==================================================
+export default function PrivateScreen({ navigation, route }) {
+    // Obtener datos del usuario desde la navegación
+    const { userName, userEmail } = route.params || { userName: 'Usuario', userEmail: '' };
+
+    // Estados del componente
+    const [activeTab, setActiveTab] = useState('Ver receta');
+    const [userRecipes, setUserRecipes] = useState([]);
+
+    // Tabs de navegación del perfil
+    const tabs = ['Me gusta', 'Favoritos', 'Subir receta', 'Ver receta'];
+
+    // Cargar recetas del usuario al entrar
     useEffect(() => {
-        loadRecipes();
+        loadUserRecipes();
     }, []);
 
+    // Recargar recetas cuando vuelva a la pantalla
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
-            loadRecipes();
+            loadUserRecipes();
         });
         return unsubscribe;
     }, [navigation]);
 
-    const loadRecipes = () => {
-        const recipes = getAllRecipes();
-        setUserRecipes(recipes);
+    // Función para cargar recetas del usuario
+    const loadUserRecipes = () => {
+        const recipes = getRecipesByUser(userEmail);
+        if (recipes.length > 0) {
+            setUserRecipes(recipes);
+        } else {
+            // Si no tiene recetas, mostrar las de ejemplo
+            setUserRecipes(defaultRecipes);
+        }
     };
 
-    const handleLogout = () => {
-        Alert.alert('Cerrar sesión', '¿Estás seguro?', [
-            { text: 'Cancelar', style: 'cancel' },
-            { text: 'Salir', onPress: () => navigation.navigate('Login') }
-        ]);
+    // Manejar cambio de tab
+    const handleTabPress = (tab) => {
+        setActiveTab(tab);
+        if (tab === 'Subir receta') {
+            navigation.navigate('AddRecipe', { userName, userEmail });
+        }
     };
 
     return (
         <View style={styles.container}>
             <SafeAreaView style={styles.safeArea}>
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    {/* Logo */}
+
+                    {/* ========== LOGO ========== */}
                     <View style={styles.logoContainer}>
-                        <View style={styles.logo}>
-                            <Text style={styles.logoEmoji}>🍳</Text>
-                        </View>
+                        <Pressable onPress={() => navigation.goBack()}>
+                            <Image
+                                source={require('../../assets/logo.png')}
+                                style={styles.logo}
+                                resizeMode="contain"
+                            />
+                        </Pressable>
                     </View>
 
-                    {/* Card beige */}
-                    <View style={styles.card}>
-                        <Text style={styles.cardTitle}>Mi Perfil</Text>
+                    {/* ========== TÍTULO ========== */}
+                    <Text style={styles.mainTitle}>Mi Perfil</Text>
 
-                        {/* Avatar */}
-                        <View style={styles.avatarContainer}>
-                            <View style={styles.avatar}>
-                                <Text style={styles.avatarEmoji}>👤</Text>
+                    {/* ========== CARD DE PERFIL ========== */}
+                    <View style={styles.profileCard}>
+
+                        {/* Icono de usuario */}
+                        <View style={styles.userIconContainer}>
+                            <View style={styles.userIconOuter}>
+                                <View style={styles.userIconHead} />
+                                <View style={styles.userIconBody} />
                             </View>
                         </View>
 
+                        {/* Nombre del usuario */}
                         <Text style={styles.userName}>{userName}</Text>
 
-                        {/* Tabs */}
+                        {/* Tabs del perfil */}
                         <View style={styles.tabsContainer}>
-                            <Pressable
-                                style={[styles.tab, activeTab === 'favoritas' && styles.tabActive]}
-                                onPress={() => setActiveTab('favoritas')}
-                            >
-                                <Text style={[styles.tabText, activeTab === 'favoritas' && styles.tabTextActive]}>
-                                    Recetas Favoritas
-                                </Text>
-                            </Pressable>
-                            <Pressable
-                                style={[styles.tab, activeTab === 'editar' && styles.tabActive]}
-                                onPress={() => setActiveTab('editar')}
-                            >
-                                <Text style={[styles.tabText, activeTab === 'editar' && styles.tabTextActive]}>
-                                    Editar modo
-                                </Text>
-                            </Pressable>
-                            <Pressable
-                                style={[styles.tab, activeTab === 'borrador' && styles.tabActive]}
-                                onPress={() => setActiveTab('borrador')}
-                            >
-                                <Text style={[styles.tabText, activeTab === 'borrador' && styles.tabTextActive]}>
-                                    Borrador
-                                </Text>
-                            </Pressable>
-                        </View>
-
-                        {/* Grid de recetas */}
-                        <View style={styles.recipesGrid}>
-                            {userRecipes.slice(0, 4).map((item) => (
+                            {tabs.map((tab) => (
                                 <Pressable
-                                    key={item.id}
-                                    style={styles.gridItem}
-                                    onPress={() => navigation.navigate('RecipeDetail', { recipeId: item.id })}
+                                    key={tab}
+                                    style={styles.tabButton}
+                                    onPress={() => handleTabPress(tab)}
                                 >
-                                    <View style={styles.gridImageContainer}>
-                                        {item.imagen ? (
-                                            <Image source={{ uri: item.imagen }} style={styles.gridImage} />
-                                        ) : (
-                                            <View style={styles.gridImagePlaceholder}>
-                                                <Text style={styles.gridPlaceholderEmoji}>🍽️</Text>
-                                            </View>
-                                        )}
-                                    </View>
-                                    <Text style={styles.gridTitle} numberOfLines={1}>{item.titulo}</Text>
+                                    <Text style={[
+                                        styles.tabText,
+                                        activeTab === tab && styles.tabTextActive
+                                    ]}>
+                                        {tab}
+                                    </Text>
                                 </Pressable>
                             ))}
                         </View>
                     </View>
 
-                    {/* Botón cerrar sesión */}
-                    <Pressable style={styles.logoutButton} onPress={handleLogout}>
-                        <Text style={styles.logoutText}>Cerrar sesión</Text>
-                    </Pressable>
+                    {/* ========== RECETAS DEL USUARIO ========== */}
+                    <View style={styles.recipesContainer}>
+                        {userRecipes.map((recipe) => (
+                            <Pressable
+                                key={recipe.id}
+                                style={styles.recipeCard}
+                                onPress={() => navigation.navigate('RecipeDetail', {
+                                    recipeId: recipe.id,
+                                    userEmail
+                                })}
+                            >
+                                {/* Imagen */}
+                                <View style={styles.recipeImageContainer}>
+                                    <Image
+                                        source={recipe.imagen}
+                                        style={styles.recipeImage}
+                                    />
+                                </View>
+
+                                {/* Info: Nombre + Nivel + Estrellas */}
+                                <View style={styles.recipeInfo}>
+                                    <View>
+                                        <Text style={styles.recipeName}>{recipe.titulo}</Text>
+                                        <Text style={styles.recipeLevel}>Nivel: {recipe.modo}</Text>
+                                    </View>
+                                    <View style={styles.ratingContainer}>
+                                        {[...Array(recipe.rating || 3)].map((_, i) => (
+                                            <View key={i} style={styles.starCircle}>
+                                                <Text style={styles.star}>★</Text>
+                                            </View>
+                                        ))}
+                                    </View>
+                                </View>
+                            </Pressable>
+                        ))}
+                    </View>
+
                 </ScrollView>
             </SafeAreaView>
         </View>
     );
 }
 
+// ==================================================
+// ESTILOS - StyleSheet
+// ==================================================
 const styles = StyleSheet.create({
+    // ----- CONTENEDOR PRINCIPAL -----
     container: {
         flex: 1,
         backgroundColor: Colors.background,
@@ -142,132 +199,159 @@ const styles = StyleSheet.create({
     safeArea: {
         flex: 1,
     },
+
+    // ----- LOGO -----
     logoContainer: {
-        alignItems: 'center',
-        paddingVertical: 12,
+        alignItems: 'flex-start',
+        paddingHorizontal: 20,
+        paddingTop: 16,
     },
     logo: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        backgroundColor: Colors.cardBg,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 2,
-        borderColor: '#FFFFFF',
+        width: 70,
+        height: 70,
+        borderRadius: 35,
     },
-    logoEmoji: {
-        fontSize: 26,
+
+    // ----- TÍTULO -----
+    mainTitle: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        fontStyle: 'italic',
+        color: '#FFFFFF',  // Blanco
+        textAlign: 'center',
+        marginVertical: 16,
     },
-    card: {
+
+    // ----- CARD DE PERFIL -----
+    profileCard: {
         backgroundColor: Colors.cardBg,
         marginHorizontal: 20,
-        borderRadius: 20,
-        padding: 18,
-    },
-    cardTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: Colors.textDark,
-        textAlign: 'center',
-        marginBottom: 14,
-    },
-    avatarContainer: {
+        borderRadius: 24,
+        padding: 24,
         alignItems: 'center',
-        marginBottom: 8,
+        marginBottom: 20,
     },
-    avatar: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: Colors.cardBg,
-        justifyContent: 'center',
+
+    // ----- ICONO DE USUARIO -----
+    userIconContainer: {
+        marginBottom: 12,
+    },
+    userIconOuter: {
         alignItems: 'center',
+    },
+    userIconHead: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
         borderWidth: 2,
-        borderColor: Colors.accent,
+        borderColor: Colors.textDark,
+        backgroundColor: 'transparent',
     },
-    avatarEmoji: {
-        fontSize: 30,
+    userIconBody: {
+        width: 30,
+        height: 18,
+        borderTopLeftRadius: 15,
+        borderTopRightRadius: 15,
+        borderWidth: 2,
+        borderBottomWidth: 0,
+        borderColor: Colors.textDark,
+        backgroundColor: 'transparent',
+        marginTop: -2,
     },
+
+    // ----- NOMBRE DE USUARIO -----
     userName: {
-        fontSize: 18,
+        fontSize: 24,
         fontWeight: 'bold',
         color: Colors.textDark,
-        textAlign: 'center',
-        marginBottom: 14,
+        fontStyle: 'italic',
+        marginBottom: 24,
     },
+
+    // ----- TABS DEL PERFIL -----
     tabsContainer: {
         flexDirection: 'row',
-        backgroundColor: Colors.background,
-        borderRadius: 12,
-        padding: 4,
-        marginBottom: 14,
+        backgroundColor: '#E8E8E8',  // Gris claro como en Figma
+        borderRadius: 16,
+        paddingVertical: 12,
+        paddingHorizontal: 12,
+        gap: 6,
     },
-    tab: {
-        flex: 1,
-        paddingVertical: 10,
-        borderRadius: 10,
-        alignItems: 'center',
-    },
-    tabActive: {
-        backgroundColor: Colors.cardBg,
+    tabButton: {
+        paddingHorizontal: 4,
     },
     tabText: {
-        color: Colors.cardBg,
-        fontSize: 10,
-        fontWeight: '600',
+        color: Colors.textDark,
+        fontSize: 11,
+        fontWeight: '500',
     },
     tabTextActive: {
-        color: Colors.textDark,
+        textDecorationLine: 'underline',
+        fontWeight: 'bold',
     },
-    recipesGrid: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
+
+    // ----- CONTENEDOR DE RECETAS -----
+    recipesContainer: {
+        // Sin fondo - las tarjetas van directamente sobre el fondo oscuro
+        marginHorizontal: 20,
+        marginBottom: 30,
     },
-    gridItem: {
-        width: '48%',
-        marginBottom: 10,
-        backgroundColor: Colors.background,
+
+    // ----- CARD DE RECETA (bloque individual) -----
+    recipeCard: {
+        backgroundColor: '#F7F7F1',  // Beige claro
+        borderRadius: 16,
+        borderWidth: 3,              // Borde café
+        borderColor: '#452121',      // Marrón oscuro
+        marginBottom: 20,
+        padding: 10,                 // Padding interno
+    },
+    recipeImageContainer: {
+        width: '100%',
+        height: 140,
         borderRadius: 12,
+        borderWidth: 3,              // Borde marrón en la imagen
+        borderColor: '#452121',
         overflow: 'hidden',
     },
-    gridImageContainer: {
-        width: '100%',
-        height: 70,
-    },
-    gridImage: {
+    recipeImage: {
         width: '100%',
         height: '100%',
     },
-    gridImagePlaceholder: {
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#D4C4B0',
+    recipeInfo: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingTop: 10,
+        paddingHorizontal: 4,
+    },
+    recipeName: {
+        color: '#000000',  // Negro
+        fontSize: 14,
+        fontWeight: 'bold',
+        fontStyle: 'italic',
+    },
+    recipeLevel: {
+        color: Colors.textDark,
+        fontSize: 11,
+        marginTop: 2,
+    },
+
+    // ----- ESTRELLAS DE RATING -----
+    ratingContainer: {
+        flexDirection: 'row',
+        gap: 4,
+    },
+    starCircle: {
+        width: 22,
+        height: 22,
+        borderRadius: 11,
+        backgroundColor: Colors.titleGold,
         justifyContent: 'center',
         alignItems: 'center',
     },
-    gridPlaceholderEmoji: {
-        fontSize: 24,
-    },
-    gridTitle: {
-        padding: 6,
-        fontSize: 11,
-        fontWeight: '600',
-        color: Colors.cardBg,
-        textAlign: 'center',
-    },
-    logoutButton: {
-        backgroundColor: Colors.cardBg,
-        marginHorizontal: 35,
-        marginVertical: 16,
-        paddingVertical: 12,
-        borderRadius: 20,
-        alignItems: 'center',
-    },
-    logoutText: {
-        color: Colors.textDark,
+    star: {
+        color: '#FFFFFF',
         fontSize: 14,
-        fontWeight: 'bold',
     },
 });

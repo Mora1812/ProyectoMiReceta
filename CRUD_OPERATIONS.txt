@@ -1,0 +1,283 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#                    FUNCIONAMIENTO DEL CRUD - MI RECETA APP
+#                         (Create, Read, Update, Delete)
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                         ¿QUÉ ES CRUD?                                      ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+#
+#   C = CREATE  (Crear)     → AddRecipeScreen.js
+#   R = READ    (Leer)      → HomeScreen.js, RecipeDetailScreen.js
+#   U = UPDATE  (Actualizar)→ EditRecipeScreen.js
+#   D = DELETE  (Eliminar)  → DeleteRecipeScreen.js
+#
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#                              DIAGRAMA CRUD
+# ═══════════════════════════════════════════════════════════════════════════
+
+                         ┌─────────────────────────────┐
+                         │        RecipesDB.js         │
+                         │    (Base de datos en        │
+                         │         memoria)            │
+                         └──────────────┬──────────────┘
+                                        │
+           ┌────────────────────────────┼────────────────────────────┐
+           │                            │                            │
+           ▼                            ▼                            ▼
+   ┌───────────────┐           ┌───────────────┐           ┌───────────────┐
+   │    CREATE     │           │     READ      │           │ UPDATE/DELETE │
+   │               │           │               │           │               │
+   │ AddRecipeScreen│           │ HomeScreen    │           │EditRecipeScreen│
+   │               │           │ PrivateScreen │           │DeleteRecipeScreen│
+   │  addRecipe()  │           │RecipeDetailScreen│         │updateRecipe() │
+   │               │           │               │           │deleteRecipe() │
+   └───────────────┘           │ getAllRecipes()│           └───────────────┘
+                               │ getRecipeById()│
+                               │getRecipesByUser()│
+                               └───────────────┘
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#                         1. CREATE (CREAR RECETA)
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# PANTALLA: AddRecipeScreen.js
+# FUNCIÓN:  addRecipe(recipe)
+#
+# FLUJO:
+#   ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+#   │ Usuario llena   │────▶│ Presiona        │────▶│ Se guarda en    │
+#   │ formulario      │     │ "Guardar Receta"│     │ RecipesDB       │
+#   └─────────────────┘     └─────────────────┘     └─────────────────┘
+#
+# CAMPOS DEL FORMULARIO:
+#   • Título
+#   • Descripción
+#   • Ingredientes
+#   • Tiempo de preparación
+#   • Nivel de dificultad
+#
+# CÓDIGO EN AddRecipeScreen.js:
+#   ```javascript
+#   const handleSave = () => {
+#       const newRecipe = {
+#           titulo: titulo,
+#           descripcion: descripcion,
+#           ingredientes: ingredientes.split('\n'),
+#           tiempo: tiempo,
+#           modo: nivel,
+#           imagen: 'postres',
+#           usuarioId: userEmail
+#       };
+#       addRecipe(newRecipe);
+#       navigation.navigate('Private');
+#   };
+#   ```
+#
+# FUNCIÓN EN RecipesDB.js:
+#   ```javascript
+#   export const addRecipe = (recipe) => {
+#       const id = recipeIdCounter++;
+#       recipes[id] = {
+#           id,
+#           ...recipe,
+#           favoritos: []
+#       };
+#       return id;
+#   };
+#   ```
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#                         2. READ (LEER RECETAS)
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# PANTALLAS: HomeScreen.js, PrivateScreen.js, RecipeDetailScreen.js
+# FUNCIONES: getAllRecipes(), getRecipeById(), getRecipesByUser()
+#
+# FLUJO:
+#   ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+#   │ Pantalla se     │────▶│ Llama a función │────▶│ Muestra recetas │
+#   │ carga           │     │ de RecipesDB    │     │ en la UI        │
+#   └─────────────────┘     └─────────────────┘     └─────────────────┘
+#
+# FUNCIONES EN RecipesDB.js:
+#   ```javascript
+#   // Obtener TODAS las recetas
+#   export const getAllRecipes = () => {
+#       return Object.values(recipes);
+#   };
+#
+#   // Obtener UNA receta por ID
+#   export const getRecipeById = (id) => {
+#       return recipes[id] || null;
+#   };
+#
+#   // Obtener recetas de UN USUARIO
+#   export const getRecipesByUser = (userEmail) => {
+#       return Object.values(recipes).filter(
+#           recipe => recipe.usuarioId === userEmail
+#       );
+#   };
+#   ```
+#
+# USO EN HomeScreen.js:
+#   ```javascript
+#   const loadRecipes = () => {
+#       const allRecipes = getAllRecipes();
+#       setRecipes(allRecipes);
+#   };
+#   ```
+#
+# USO EN RecipeDetailScreen.js:
+#   ```javascript
+#   const recipe = getRecipeById(recipeId);
+#   ```
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#                       3. UPDATE (ACTUALIZAR RECETA)
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# PANTALLA: EditRecipeScreen.js
+# FUNCIÓN:  updateRecipe(id, data)
+#
+# FLUJO:
+#   ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+#   │ Carga datos     │────▶│ Usuario edita   │────▶│ Presiona        │
+#   │ actuales        │     │ los campos      │     │ "Actualizar"    │
+#   └─────────────────┘     └─────────────────┘     └────────┬────────┘
+#                                                            │
+#                                                            ▼
+#                                                   ┌─────────────────┐
+#                                                   │ Se actualiza en │
+#                                                   │ RecipesDB       │
+#                                                   └─────────────────┘
+#
+# CÓDIGO EN EditRecipeScreen.js:
+#   ```javascript
+#   // Cargar datos actuales al iniciar
+#   useEffect(() => {
+#       const recipe = getRecipeById(recipeId);
+#       setTitulo(recipe.titulo);
+#       setDescripcion(recipe.descripcion);
+#       // ...
+#   }, []);
+#
+#   // Guardar cambios
+#   const handleUpdate = () => {
+#       updateRecipe(recipeId, {
+#           titulo: titulo,
+#           descripcion: descripcion,
+#           ingredientes: ingredientes.split('\n'),
+#           tiempo: tiempo,
+#           modo: nivel
+#       });
+#       navigation.goBack();
+#   };
+#   ```
+#
+# FUNCIÓN EN RecipesDB.js:
+#   ```javascript
+#   export const updateRecipe = (id, data) => {
+#       if (recipes[id]) {
+#           recipes[id] = { ...recipes[id], ...data };
+#           return true;
+#       }
+#       return false;
+#   };
+#   ```
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#                        4. DELETE (ELIMINAR RECETA)
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# PANTALLA: DeleteRecipeScreen.js
+# FUNCIÓN:  deleteRecipe(id)
+#
+# FLUJO:
+#   ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+#   │ Usuario presiona│────▶│ Muestra pantalla│────▶│ Confirma        │
+#   │ "Eliminar" en   │     │ de confirmación │     │ "Eliminar       │
+#   │ RecipeDetail    │     │                 │     │  Receta"        │
+#   └─────────────────┘     └─────────────────┘     └────────┬────────┘
+#                                                            │
+#                                                            ▼
+#                                                   ┌─────────────────┐
+#                                                   │ Se elimina de   │
+#                                                   │ RecipesDB       │
+#                                                   └─────────────────┘
+#
+# CÓDIGO EN DeleteRecipeScreen.js:
+#   ```javascript
+#   const handleDelete = () => {
+#       deleteRecipe(recipeId);
+#       Alert.alert('Receta eliminada', 'La receta fue eliminada', [
+#           { text: 'OK', onPress: () => navigation.navigate('Private') }
+#       ]);
+#   };
+#   ```
+#
+# FUNCIÓN EN RecipesDB.js:
+#   ```javascript
+#   export const deleteRecipe = (id) => {
+#       if (recipes[id]) {
+#           delete recipes[id];
+#           return true;
+#       }
+#       return false;
+#   };
+#   ```
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#                         RESUMEN DE FUNCIONES
+# ═══════════════════════════════════════════════════════════════════════════
+
+# ┌───────────┬─────────────────────┬──────────────────────────────────────┐
+# │ OPERACIÓN │ FUNCIÓN             │ DESCRIPCIÓN                          │
+# ├───────────┼─────────────────────┼──────────────────────────────────────┤
+# │ CREATE    │ addRecipe(recipe)   │ Agrega nueva receta a la base de    │
+# │           │                     │ datos y retorna el ID generado      │
+# ├───────────┼─────────────────────┼──────────────────────────────────────┤
+# │ READ      │ getAllRecipes()     │ Retorna array con todas las recetas │
+# │           │ getRecipeById(id)   │ Retorna una receta específica        │
+# │           │ getRecipesByUser()  │ Retorna recetas de un usuario        │
+# ├───────────┼─────────────────────┼──────────────────────────────────────┤
+# │ UPDATE    │ updateRecipe(id,    │ Actualiza los datos de una receta   │
+# │           │              data)  │ existente                            │
+# ├───────────┼─────────────────────┼──────────────────────────────────────┤
+# │ DELETE    │ deleteRecipe(id)    │ Elimina una receta de la base de    │
+# │           │                     │ datos                                │
+# └───────────┴─────────────────────┴──────────────────────────────────────┘
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#                    ESTRUCTURA DE UNA RECETA
+# ═══════════════════════════════════════════════════════════════════════════
+
+# {
+#     id: 1,                              // ID único (generado automático)
+#     titulo: "Bandeja paisa",            // Nombre de la receta
+#     descripcion: "Plato típico...",     // Descripción
+#     ingredientes: [                     // Array de ingredientes
+#         "Frijoles",
+#         "Arroz",
+#         "Carne molida"
+#     ],
+#     instrucciones: "Cocinar...",        // Pasos de preparación
+#     tiempo: "60 min",                   // Tiempo de preparación
+#     modo: "Medio",                      // Nivel de dificultad
+#     imagen: "bandeja_paisa",            // Referencia a asset
+#     usuarioId: "email@email.com",       // Email del creador
+#     rating: 5,                          // Calificación (estrellas)
+#     favoritos: []                       // Usuarios que lo marcaron
+# }
+
+
+# ═══════════════════════════════════════════════════════════════════════════

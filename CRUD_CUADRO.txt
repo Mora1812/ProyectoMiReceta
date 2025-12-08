@@ -1,0 +1,26 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+#                                    CUADRO DE FUNCIONAMIENTO CRUD
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌───────────┬──────────────────────┬──────────────────────┬───────────────────────────────────────────────┐
+│ OPERACIÓN │ PANTALLA             │ FUNCIÓN              │ FUNCIONAMIENTO                                │
+├───────────┼──────────────────────┼──────────────────────┼───────────────────────────────────────────────┤
+│           │                      │                      │ Usuario llena formulario con título,          │
+│  CREATE   │ AddRecipeScreen      │ addRecipe(recipe)    │ descripción, ingredientes y tiempo.           │
+│           │                      │                      │ Se guarda en RecipesDB.                       │
+├───────────┼──────────────────────┼──────────────────────┼───────────────────────────────────────────────┤
+│           │ HomeScreen           │ getAllRecipes()      │ Carga y muestra todas las recetas.            │
+│  READ     │ PrivateScreen        │ getRecipeById(id)    │ Muestra recetas del usuario o detalle         │
+│           │ RecipeDetailScreen   │ getRecipesByUser()   │ completo de una receta seleccionada.          │
+├───────────┼──────────────────────┼──────────────────────┼───────────────────────────────────────────────┤
+│           │                      │                      │ Carga datos actuales, usuario modifica        │
+│  UPDATE   │ EditRecipeScreen     │ updateRecipe(id,data)│ los campos y guarda los cambios               │
+│           │                      │                      │ en RecipesDB.                                 │
+├───────────┼──────────────────────┼──────────────────────┼───────────────────────────────────────────────┤
+│           │                      │                      │ Muestra confirmación, usuario confirma        │
+│  DELETE   │ DeleteRecipeScreen   │ deleteRecipe(id)     │ y la receta se elimina permanentemente        │
+│           │                      │                      │ de RecipesDB.                                 │
+└───────────┴──────────────────────┴──────────────────────┴───────────────────────────────────────────────┘
+
+# Base de datos: src/data/RecipesDB.js
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════

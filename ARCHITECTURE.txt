@@ -1,0 +1,214 @@
+# ============================================================
+# ARQUITECTURA DEL PROYECTO - MI RECETA APP
+# ============================================================
+# Este documento explica cómo se organiza todo el código
+# del proyecto Mi Receta para React Native con Expo.
+# ============================================================
+
+
+# ============================================================
+# ESTRUCTURA DE CARPETAS
+# ============================================================
+#
+# ProyectoMovilReceta/
+# │
+# ├── App.js                    # Punto de entrada de la app
+# │                             # Configura la navegación entre pantallas
+# │
+# ├── assets/                   # Carpeta de imágenes y recursos
+# │   ├── logo.png              # Logo de la aplicación
+# │   ├── bandeja_paisa.png     # Imagen de receta
+# │   ├── tacos.png             # Imagen de receta
+# │   ├── pollo.png             # Imagen de categoría
+# │   ├── carne_res.png         # Imagen de categoría
+# │   ├── cerdo.png             # Imagen de categoría
+# │   └── postres.png           # Imagen de categoría
+# │
+# └── src/                      # Código fuente principal
+#     │
+#     ├── screens/              # PANTALLAS DE LA APLICACIÓN
+#     │   ├── WelcomeScreen.js      # Pantalla de bienvenida (antes de login)
+#     │   ├── LoginScreen.js        # Formulario de inicio de sesión
+#     │   ├── RegisterScreen.js     # Formulario de registro
+#     │   ├── HomeScreen.js         # Pantalla principal (después de login)
+#     │   ├── PrivateScreen.js      # Perfil del usuario y sus recetas
+#     │   ├── RecipeDetailScreen.js # Detalle de una receta
+#     │   ├── AddRecipeScreen.js    # Formulario para crear receta
+#     │   ├── EditRecipeScreen.js   # Formulario para editar receta
+#     │   ├── DeleteRecipeScreen.js # Confirmación de eliminación
+#     │   └── index.js              # Exporta todas las pantallas
+#     │
+#     ├── data/                 # DATOS Y BASE DE DATOS
+#     │   └── RecipesDB.js      # Base de datos de recetas en memoria
+#     │
+#     └── constants/            # CONSTANTES
+#         └── theme.js          # Colores y estilos globales
+#
+
+
+# ============================================================
+# FLUJO DE NAVEGACIÓN
+# ============================================================
+#
+#   ┌──────────────────┐
+#   │  WelcomeScreen   │  ← Pantalla inicial (sin login)
+#   └────────┬─────────┘
+#            │
+#    ┌───────┴───────┐
+#    ▼               ▼
+# ┌──────┐     ┌──────────┐
+# │Login │     │ Register │
+# └──┬───┘     └────┬─────┘
+#    │              │
+#    └──────┬───────┘
+#           ▼
+#   ┌──────────────┐
+#   │  HomeScreen  │  ← Pantalla principal (con login)
+#   └──────┬───────┘
+#          │
+#    ┌─────┴─────┐
+#    ▼           ▼
+# ┌────────┐  ┌─────────────────┐
+# │Private │  │ RecipeDetail    │
+# │Screen  │  │ Screen          │
+# └───┬────┘  └───────┬─────────┘
+#     │               │
+#     ▼         ┌─────┴─────┐
+# ┌────────┐    ▼           ▼
+# │AddRecipe│ ┌──────┐  ┌────────┐
+# │ Screen │ │Edit  │  │Delete  │
+# └────────┘ │Recipe│  │Recipe  │
+#            └──────┘  └────────┘
+#
+
+
+# ============================================================
+# DESCRIPCIÓN DE CADA PANTALLA
+# ============================================================
+#
+# 1. WelcomeScreen.js
+#    - Pantalla de bienvenida que se muestra antes de iniciar sesión
+#    - Muestra recetas públicas de ejemplo
+#    - Tiene botón "Login" para ir a iniciar sesión
+#
+# 2. LoginScreen.js
+#    - Formulario con campos: email y contraseña
+#    - Valida credenciales y navega a HomeScreen
+#    - Tiene link para ir a RegisterScreen
+#
+# 3. RegisterScreen.js
+#    - Formulario de registro con: nombre, email, contraseña
+#    - Crea nuevo usuario y navega a LoginScreen
+#
+# 4. HomeScreen.js
+#    - Pantalla principal después de iniciar sesión
+#    - Muestra todas las recetas con buscador funcional
+#    - Categorías: Pollo, Res, Cerdo, Postres
+#    - Tabs: Recetas, Calendario, Libros, Blog
+#
+# 5. PrivateScreen.js
+#    - Perfil del usuario con sus datos
+#    - Muestra recetas creadas por el usuario
+#    - Tabs: Me gusta, Favoritos, Subir receta, Ver receta
+#
+# 6. RecipeDetailScreen.js
+#    - Muestra todos los detalles de una receta:
+#      * Imagen, nombre, rating (estrellas)
+#      * Tiempo de preparación y nivel
+#      * Ingredientes e instrucciones
+#    - Botones: Editar y Eliminar (solo para el dueño)
+#
+# 7. AddRecipeScreen.js
+#    - Formulario para crear nueva receta:
+#      * Título, descripción, ingredientes
+#      * Tiempo, nivel de dificultad
+#    - Guarda en RecipesDB
+#
+# 8. EditRecipeScreen.js
+#    - Formulario para modificar receta existente
+#    - Carga datos actuales y permite editarlos
+#    - Actualiza en RecipesDB
+#
+# 9. DeleteRecipeScreen.js
+#    - Pantalla de confirmación antes de eliminar
+#    - Logo clickeable para volver atrás
+#    - Botón "Eliminar Receta" para confirmar
+#
+
+
+# ============================================================
+# BASE DE DATOS - RecipesDB.js
+# ============================================================
+#
+# Funciones disponibles (CRUD):
+#
+# CREATE (Crear):
+#   addRecipe(recipe)           → Agrega nueva receta
+#
+# READ (Leer):
+#   getAllRecipes()             → Obtiene todas las recetas
+#   getRecipeById(id)           → Obtiene una receta por ID
+#   getRecipesByUser(email)     → Recetas de un usuario
+#
+# UPDATE (Actualizar):
+#   updateRecipe(id, data)      → Actualiza una receta
+#
+# DELETE (Eliminar):
+#   deleteRecipe(id)            → Elimina una receta
+#
+# Otras funciones:
+#   isFavorite(id, email)       → Verifica si es favorito
+#   toggleFavorite(id, email)   → Agrega/quita de favoritos
+#
+
+
+# ============================================================
+# PALETA DE COLORES
+# ============================================================
+#
+# Fondo principal:   #452121  (Marrón oscuro)
+# Fondo tarjetas:    #F7F7F1  (Beige claro)
+# Botones/Tabs:      #682929  (Marrón)
+# Dorado:            #D4AD58  (Estrellas, títulos)
+# Texto oscuro:      #452121  (Marrón oscuro)
+# Texto claro:       #FFFFFF  (Blanco)
+# Texto contenido:   #000000  (Negro)
+#
+
+
+# ============================================================
+# PATRÓN DE CÓDIGO EN CADA PANTALLA
+# ============================================================
+#
+# Cada pantalla sigue esta estructura:
+#
+# 1. IMPORTS
+#    import React, { useState, useEffect } from 'react';
+#    import { View, Text, StyleSheet } from 'react-native';
+#
+# 2. COLORES (constantes locales)
+#    const Colors = { background: '#452121', ... };
+#
+# 3. DATOS (arrays de ejemplo)
+#    const categories = [...];
+#
+# 4. COMPONENTE PRINCIPAL
+#    export default function MiScreen({ navigation, route }) {
+#        // Estados
+#        const [state, setState] = useState();
+#        // Efectos
+#        useEffect(() => {...}, []);
+#        // Funciones
+#        const handleAction = () => {...};
+#        // Render
+#        return ( <View>...</View> );
+#    }
+#
+# 5. ESTILOS
+#    const styles = StyleSheet.create({ ... });
+#
+
+
+# ============================================================
+# FIN DEL DOCUMENTO DE ARQUITECTURA
+# ============================================================

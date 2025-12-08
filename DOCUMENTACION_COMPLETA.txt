@@ -1,0 +1,332 @@
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+#                               DOCUMENTACIÓN COMPLETA DEL PROYECTO
+#                                        MI RECETA APP
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+#                                   ESTRUCTURA DEL PROYECTO
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+ProyectoMovilReceta/
+│
+├── App.js                     ← Archivo principal (punto de entrada)
+├── app.json                   ← Configuración de Expo
+├── package.json               ← Dependencias del proyecto
+│
+├── assets/                    ← Carpeta de imágenes
+│   ├── logo.png
+│   ├── bandeja_paisa.png
+│   ├── tacos.png
+│   └── ...
+│
+└── src/                       ← Código fuente
+    ├── screens/               ← Pantallas de la app
+    │   ├── WelcomeScreen.js
+    │   ├── LoginScreen.js
+    │   ├── RegisterScreen.js
+    │   ├── HomeScreen.js
+    │   ├── PrivateScreen.js
+    │   ├── RecipeDetailScreen.js
+    │   ├── AddRecipeScreen.js
+    │   ├── EditRecipeScreen.js
+    │   ├── DeleteRecipeScreen.js
+    │   └── index.js
+    │
+    └── data/                  ← Base de datos
+        └── RecipesDB.js
+
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+#                                   ARCHIVOS PRINCIPALES
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  APP.JS - PUNTO DE ENTRADA                                                                              │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                         │
+│  ¿Qué es?      El archivo principal que inicia toda la aplicación.                                     │
+│                                                                                                         │
+│  ¿Qué hace?    1. Importa todas las pantallas                                                          │
+│                2. Configura la navegación con React Navigation                                          │
+│                3. Define la pantalla inicial (Welcome)                                                  │
+│                4. Establece las rutas entre pantallas                                                   │
+│                                                                                                         │
+│  Tecnología:   React Navigation (Stack Navigator)                                                       │
+│                                                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  PACKAGE.JSON - DEPENDENCIAS                                                                            │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                         │
+│  ¿Qué es?      Archivo que lista todas las librerías que usa el proyecto.                              │
+│                                                                                                         │
+│  Dependencias principales:                                                                              │
+│    - react: 18.2.0                    → Librería principal de React                                    │
+│    - react-native: 0.74.5             → Framework para apps móviles                                    │
+│    - expo: ~51.0.28                   → Herramientas de desarrollo                                     │
+│    - @react-navigation/native         → Navegación entre pantallas                                     │
+│    - @react-navigation/native-stack   → Navegador tipo pila (stack)                                    │
+│                                                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+#                                   CARPETA: assets/
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  ASSETS - RECURSOS E IMÁGENES                                                                           │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                         │
+│  ¿Qué contiene?    Todas las imágenes usadas en la aplicación.                                         │
+│                                                                                                         │
+│  Archivos:                                                                                              │
+│    - logo.png           → Logo de Mi Receta (se muestra en header)                                     │
+│    - bandeja_paisa.png  → Imagen de receta                                                              │
+│    - tacos.png          → Imagen de receta                                                              │
+│    - pollo.png          → Imagen de categoría Pollo                                                     │
+│    - carne_res.png      → Imagen de categoría Res                                                       │
+│    - cerdo.png          → Imagen de categoría Cerdo                                                     │
+│    - postres.png        → Imagen de categoría Postres                                                   │
+│    - camera_icon.png    → Icono de cámara para subir foto                                               │
+│                                                                                                         │
+│  ¿Cómo se usan?    Con require():  require('../../assets/logo.png')                                    │
+│                                                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+#                                   CARPETA: src/screens/
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  1. WelcomeScreen.js - PANTALLA DE BIENVENIDA                                                           │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                         │
+│  ¿Cuándo se muestra?   Al abrir la app (antes de iniciar sesión).                                      │
+│                                                                                                         │
+│  ¿Qué contiene?                                                                                         │
+│    - Logo de la aplicación                                                                              │
+│    - Botón "Login" para ir a iniciar sesión                                                             │
+│    - Barra de búsqueda (decorativa)                                                                     │
+│    - Tabs de navegación (Recetas, Calendario, Libros, Blog)                                             │
+│    - Categorías con círculos (Pollo, Res, Cerdo, Postres)                                               │
+│    - Tarjetas de recetas de ejemplo                                                                     │
+│                                                                                                         │
+│  Navegación:           Botón Login → LoginScreen                                                        │
+│                                                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  2. LoginScreen.js - INICIO DE SESIÓN                                                                   │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                         │
+│  ¿Qué hace?            Permite al usuario ingresar a su cuenta.                                        │
+│                                                                                                         │
+│  Campos del formulario:                                                                                 │
+│    - Email                                                                                              │
+│    - Contraseña                                                                                         │
+│                                                                                                         │
+│  Botones:                                                                                               │
+│    - "Iniciar Sesión" → Valida y va a HomeScreen                                                        │
+│    - "¿Olvidaste tu contraseña?"                                                                        │
+│    - "Crear cuenta" → Va a RegisterScreen                                                               │
+│                                                                                                         │
+│  Validación:           Si email o contraseña están vacíos, muestra error.                              │
+│                                                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  3. RegisterScreen.js - REGISTRO                                                                        │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                         │
+│  ¿Qué hace?            Permite crear una nueva cuenta.                                                  │
+│                                                                                                         │
+│  Campos del formulario:                                                                                 │
+│    - Nombre                                                                                             │
+│    - Email                                                                                              │
+│    - Contraseña                                                                                         │
+│                                                                                                         │
+│  Botones:                                                                                               │
+│    - "Crear cuenta" → Registra y va a LoginScreen                                                       │
+│    - "Iniciar Sesión" → Va a LoginScreen                                                                │
+│                                                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  4. HomeScreen.js - PANTALLA PRINCIPAL                                                                  │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                         │
+│  ¿Cuándo se muestra?   Después de iniciar sesión.                                                      │
+│                                                                                                         │
+│  ¿Qué contiene?                                                                                         │
+│    - Logo y botón "perfil"                                                                              │
+│    - Barra de búsqueda FUNCIONAL (filtra recetas)                                                       │
+│    - Tabs de navegación                                                                                 │
+│    - Categorías con círculos                                                                            │
+│    - Tarjetas de TODAS las recetas (de la base de datos)                                                │
+│                                                                                                         │
+│  Funcionalidad:        Usa getAllRecipes() para cargar recetas de RecipesDB                            │
+│  Buscador:             Filtra recetas por nombre en tiempo real                                         │
+│                                                                                                         │
+│  Navegación:                                                                                            │
+│    - Botón "perfil" → PrivateScreen                                                                     │
+│    - Click en tarjeta → RecipeDetailScreen                                                              │
+│                                                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  5. PrivateScreen.js - PERFIL DEL USUARIO                                                               │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                         │
+│  ¿Qué muestra?         Información del usuario y SUS recetas.                                          │
+│                                                                                                         │
+│  ¿Qué contiene?                                                                                         │
+│    - Título "Mi Perfil"                                                                                 │
+│    - Card con icono de usuario y nombre                                                                 │
+│    - Tabs: Me gusta, Favoritos, Subir receta, Ver receta                                                │
+│    - Lista de recetas creadas por el usuario                                                            │
+│                                                                                                         │
+│  Funcionalidad:        Usa getRecipesByUser(email) para cargar solo las recetas del usuario            │
+│                                                                                                         │
+│  Navegación:                                                                                            │
+│    - Tab "Subir receta" → AddRecipeScreen                                                               │
+│    - Click en tarjeta → RecipeDetailScreen                                                              │
+│                                                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  6. RecipeDetailScreen.js - DETALLE DE RECETA                                                           │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                         │
+│  ¿Qué muestra?         Todos los detalles de una receta seleccionada.                                  │
+│                                                                                                         │
+│  ¿Qué contiene?                                                                                         │
+│    - Imagen grande de la receta                                                                         │
+│    - Nombre y rating (estrellas)                                                                        │
+│    - Tiempo de preparación y nivel de dificultad                                                        │
+│    - Lista de ingredientes                                                                              │
+│    - Instrucciones de preparación                                                                       │
+│    - Botones "Editar" y "Eliminar" (solo si es el dueño)                                                │
+│                                                                                                         │
+│  Funcionalidad:        Usa getRecipeById(id) para cargar los datos                                     │
+│                                                                                                         │
+│  Navegación:                                                                                            │
+│    - Botón "Editar" → EditRecipeScreen                                                                  │
+│    - Botón "Eliminar" → DeleteRecipeScreen                                                              │
+│                                                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  7. AddRecipeScreen.js - CREAR RECETA                                                                   │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                         │
+│  ¿Qué hace?            Permite crear una nueva receta.                                                  │
+│                                                                                                         │
+│  Campos del formulario:                                                                                 │
+│    - Título                                                                                             │
+│    - Descripción                                                                                        │
+│    - Ingredientes (uno por línea)                                                                       │
+│    - Tiempo de preparación                                                                              │
+│    - Nivel de dificultad                                                                                │
+│    - Subir foto (icono de cámara)                                                                       │
+│                                                                                                         │
+│  Botón:                "Guardar Receta" → Guarda en RecipesDB con addRecipe()                          │
+│                                                                                                         │
+│  Después de guardar:   Navega a PrivateScreen                                                           │
+│                                                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  8. EditRecipeScreen.js - EDITAR RECETA                                                                 │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                         │
+│  ¿Qué hace?            Permite modificar una receta existente.                                          │
+│                                                                                                         │
+│  Funcionamiento:                                                                                        │
+│    1. Carga los datos actuales de la receta con getRecipeById()                                         │
+│    2. Muestra los datos en el formulario                                                                │
+│    3. Usuario modifica los campos                                                                       │
+│    4. Guarda cambios con updateRecipe()                                                                 │
+│                                                                                                         │
+│  Campos:               Igual que AddRecipeScreen (título, descripción, etc.)                           │
+│                                                                                                         │
+│  Botón:                "Actualizar Receta" → Actualiza en RecipesDB                                    │
+│                                                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  9. DeleteRecipeScreen.js - ELIMINAR RECETA                                                             │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                         │
+│  ¿Qué hace?            Pantalla de confirmación antes de eliminar.                                      │
+│                                                                                                         │
+│  ¿Qué contiene?                                                                                         │
+│    - Logo (clickeable para volver atrás)                                                                │
+│    - Título "Eliminar Receta"                                                                           │
+│    - Mensaje de confirmación                                                                            │
+│    - Botón "Eliminar Receta"                                                                            │
+│                                                                                                         │
+│  Funcionamiento:                                                                                        │
+│    1. Usuario presiona "Eliminar"                                                                       │
+│    2. Se llama deleteRecipe(id)                                                                         │
+│    3. Muestra alerta de éxito                                                                           │
+│    4. Navega a PrivateScreen                                                                            │
+│                                                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  10. index.js - EXPORTADOR                                                                              │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                         │
+│  ¿Qué hace?            Exporta todas las pantallas en un solo lugar.                                   │
+│                                                                                                         │
+│  Beneficio:            Permite importar todas las pantallas con una sola línea en App.js               │
+│                                                                                                         │
+│  Ejemplo:              import { HomeScreen, LoginScreen } from './src/screens';                        │
+│                                                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+#                                   CARPETA: src/data/
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  RecipesDB.js - BASE DE DATOS                                                                           │
+├─────────────────────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                                         │
+│  Tipo:                 Base de datos en memoria (JavaScript Object)                                     │
+│                                                                                                         │
+│  ¿Qué almacena?        Todas las recetas de la aplicación.                                             │
+│                                                                                                         │
+│  Estructura de receta:                                                                                  │
+│    {                                                                                                    │
+│      id: 1,                          // ID único automático                                             │
+│      titulo: "Bandeja paisa",        // Nombre                                                          │
+│      descripcion: "Plato típico...", // Descripción                                                     │
+│      ingredientes: ["Arroz", ...],   // Lista de ingredientes                                           │
+│      instrucciones: "Cocinar...",    // Pasos                                                           │
+│      tiempo: "60 min",               // Tiempo de preparación                                           │
+│      modo: "Medio",                  // Nivel de dificultad                                             │
+│      imagen: "bandeja_paisa",        // Nombre de imagen                                                │
+│      usuarioId: "email@email.com",   // Email del creador                                               │
+│      rating: 5                       // Calificación                                                    │
+│    }                                                                                                    │
+│                                                                                                         │
+│  Funciones CRUD:                                                                                        │
+│    - addRecipe(recipe)           → Crear nueva receta                                                   │
+│    - getAllRecipes()             → Obtener todas las recetas                                            │
+│    - getRecipeById(id)           → Obtener una receta por ID                                            │
+│    - getRecipesByUser(email)     → Obtener recetas de un usuario                                        │
+│    - updateRecipe(id, data)      → Actualizar receta                                                    │
+│    - deleteRecipe(id)            → Eliminar receta                                                      │
+│                                                                                                         │
+└─────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════
+#                                   FIN DEL DOCUMENTO
+# ═══════════════════════════════════════════════════════════════════════════════════════════════════════

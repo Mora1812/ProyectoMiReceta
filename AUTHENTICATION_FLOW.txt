@@ -1,0 +1,146 @@
+# ═══════════════════════════════════════════════════════════════════════════
+#                    FLUJO DE AUTENTICACIÓN - MI RECETA APP
+#                         Diagrama para presentación
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+# ╔═══════════════════════════════════════════════════════════════════════════╗
+# ║                         DIAGRAMA DE FLUJO                                  ║
+# ╚═══════════════════════════════════════════════════════════════════════════╝
+
+
+                              ┌─────────────────┐
+                              │     INICIO      │
+                              │   (App.js)      │
+                              └────────┬────────┘
+                                       │
+                                       ▼
+                         ┌─────────────────────────┐
+                         │     WelcomeScreen       │
+                         │   (Pantalla Pública)    │
+                         │                         │
+                         │  • Muestra recetas de   │
+                         │    ejemplo              │
+                         │  • Botón [Login]        │
+                         └───────────┬─────────────┘
+                                     │
+                     ┌───────────────┴───────────────┐
+                     │                               │
+                     ▼                               ▼
+        ┌────────────────────┐          ┌────────────────────┐
+        │    LoginScreen     │          │   RegisterScreen   │
+        │                    │          │                    │
+        │  ┌──────────────┐  │          │  ┌──────────────┐  │
+        │  │ Email        │  │          │  │ Nombre       │  │
+        │  └──────────────┘  │          │  └──────────────┘  │
+        │  ┌──────────────┐  │          │  ┌──────────────┐  │
+        │  │ Contraseña   │  │          │  │ Email        │  │
+        │  └──────────────┘  │          │  └──────────────┘  │
+        │                    │          │  ┌──────────────┐  │
+        │ [Iniciar Sesión]   │          │  │ Contraseña   │  │
+        │ [Crear Cuenta] ────┼──────────┤  └──────────────┘  │
+        └─────────┬──────────┘          │                    │
+                  │                     │  [Crear Cuenta]    │
+                  ▼                     └─────────┬──────────┘
+         ◇─────────────────◇                      │
+        ╱                   ╲                     │
+       ╱  ¿Credenciales      ╲                    │
+      ╱     válidas?          ╲                   │
+      ╲                       ╱                   ▼
+       ╲                     ╱           ◇─────────────────◇
+        ╲                   ╱           ╱                   ╲
+         ◇─────────────────◇          ╱  ¿Datos completos?  ╲
+           │           │             ╱                       ╲
+           │ SÍ        │ NO         ╲                       ╱
+           │           │             ╲                     ╱
+           │           ▼              ◇─────────────────◇
+           │    ┌───────────┐           │           │
+           │    │  ERROR    │           │ SÍ        │ NO
+           │    │ Credencia-│           │           │
+           │    │ les inco- │           │           ▼
+           │    │ rrectas   │           │    ┌───────────┐
+           │    └───────────┘           │    │  ERROR    │
+           │                            │    │ Campos    │
+           ▼                            │    │ vacíos    │
+   ┌───────────────────┐                │    └───────────┘
+   │    HomeScreen     │                │
+   │  (Vista privada)  │◄───────────────┘
+   │                   │     Usuario autenticado
+   │ • Todas las       │
+   │   recetas         │
+   │ • Buscador        │
+   │ • Categorías      │
+   └─────────┬─────────┘
+             │
+     ┌───────┴───────┐
+     │               │
+     ▼               ▼
+┌──────────┐   ┌─────────────────┐
+│PrivateScreen│   │RecipeDetailScreen│
+│  (Perfil)  │   │  (Ver receta)   │
+│            │   │                 │
+│ • Mis datos│   │ • Ingredientes  │
+│ • Mis      │   │ • Instrucciones │
+│   recetas  │   │ • [Editar]      │
+│ • [Subir   │   │ • [Eliminar]    │
+│   receta]  │   └────────┬────────┘
+└──────┬─────┘            │
+       │          ┌───────┴───────┐
+       ▼          │               │
+┌──────────────┐  ▼               ▼
+│AddRecipeScreen│ ┌──────────┐ ┌──────────────┐
+│ (Crear)      │ │EditRecipe│ │DeleteRecipe  │
+└──────────────┘ │ Screen   │ │ Screen       │
+                 │(Editar)  │ │(Eliminar)    │
+                 └──────────┘ └──────────────┘
+
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#                              RESUMEN DEL FLUJO
+# ═══════════════════════════════════════════════════════════════════════════
+
+# PASO 1: Usuario abre la app → WelcomeScreen
+# PASO 2: Usuario presiona "Login" → LoginScreen
+# PASO 3: Ingresa email y contraseña
+# PASO 4: Sistema valida credenciales
+#         ├── SI válidas → HomeScreen (autenticado)
+#         └── NO válidas → Muestra error
+# PASO 5: En HomeScreen puede:
+#         ├── Ver recetas → RecipeDetailScreen
+#         └── Ver perfil → PrivateScreen
+# PASO 6: En PrivateScreen puede:
+#         └── Subir receta → AddRecipeScreen
+# PASO 7: En RecipeDetailScreen puede:
+#         ├── Editar → EditRecipeScreen
+#         └── Eliminar → DeleteRecipeScreen
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#                        DATOS PASADOS ENTRE PANTALLAS
+# ═══════════════════════════════════════════════════════════════════════════
+
+# Login → Home:
+#   {
+#     userName: "nombre del usuario",
+#     userEmail: "email@email.com"
+#   }
+
+# Home → RecipeDetail:
+#   {
+#     recipeId: 123,
+#     userEmail: "email@email.com"  (para verificar propiedad)
+#   }
+
+# RecipeDetail → EditRecipe:
+#   {
+#     recipeId: 123
+#   }
+
+# RecipeDetail → DeleteRecipe:
+#   {
+#     recipeId: 123
+#   }
+
+
+# ═══════════════════════════════════════════════════════════════════════════

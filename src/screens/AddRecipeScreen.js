@@ -1,103 +1,72 @@
 // src/screens/AddRecipeScreen.js
-// Pantalla "Agregar Receta" - ESTILOS 100% IDÉNTICOS al prototipo Figma
+// Vista "Agregar Receta" - ESTILOS EXACTOS del Figma
 import React, { useState } from 'react';
 import {
     View,
     Text,
-    TextInput,
     StyleSheet,
-    Pressable,
     ScrollView,
+    Image,
     SafeAreaView,
-    Alert,
-    Image
+    Pressable,
+    TextInput,
+    Alert
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { saveRecipe } from '../data/RecipesDB';
 
-// COLORES EXACTOS del prototipo Figma
+// COLORES EXACTOS del Figma
 const Colors = {
-    background: '#452121',  // MARRÓN - Fondo
-    cardBg: '#F5E6D3',      // Beige
-    inputBg: '#452121',     // Marrón para inputs
-    textLight: '#F5E6D3',
+    background: '#452121',
+    cardBg: '#F7F7F1',
+    inputBg: '#F5E8E8',      // Rosado/beige claro para inputs
+    titleLight: '#F5E6D3',   // Beige claro para título
+    titleGold: '#D4AD58',
     textDark: '#452121',
-    textMuted: '#888888',
+    buttonBg: '#5C3A2E',     // Marrón para botón
 };
 
 export default function AddRecipeScreen({ navigation, route }) {
-    const userEmail = route?.params?.userEmail || 'demo@email.com';
+    const { userName, userEmail } = route.params || { userName: 'Usuario', userEmail: '' };
 
     const [titulo, setTitulo] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [ingredientes, setIngredientes] = useState('');
     const [tiempo, setTiempo] = useState('');
-    const [modo, setModo] = useState('');
-    const [imagen, setImagen] = useState(null);
+    const [nivel, setNivel] = useState('');
+    const [foto, setFoto] = useState(null);
 
     const pickImage = async () => {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== 'granted') {
-            Alert.alert('Permiso denegado', 'Necesitamos acceso a tu galería');
-            return;
-        }
-
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             aspect: [4, 3],
-            quality: 0.8,
+            quality: 1,
         });
 
-        if (!result.canceled && result.assets[0]) {
-            setImagen(result.assets[0].uri);
+        if (!result.canceled) {
+            setFoto(result.assets[0].uri);
         }
     };
 
-    const takePhoto = async () => {
-        const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== 'granted') {
-            Alert.alert('Permiso denegado', 'Necesitamos acceso a tu cámara');
-            return;
-        }
-
-        const result = await ImagePicker.launchCameraAsync({
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 0.8,
-        });
-
-        if (!result.canceled && result.assets[0]) {
-            setImagen(result.assets[0].uri);
-        }
-    };
-
-    const showImageOptions = () => {
-        Alert.alert('Subir foto', 'Elige una opción', [
-            { text: 'Cámara', onPress: takePhoto },
-            { text: 'Galería', onPress: pickImage },
-            { text: 'Cancelar', style: 'cancel' },
-        ]);
-    };
-
-    const handleSave = () => {
-        if (!titulo) {
-            Alert.alert('Error', 'El título es obligatorio');
+    const handleGuardar = () => {
+        if (!titulo.trim()) {
+            Alert.alert('Error', 'Por favor ingresa un título');
             return;
         }
 
         const newRecipe = {
-            titulo,
-            descripcion,
-            ingredientes: ingredientes.split('\n').filter(i => i.trim() !== ''),
-            instrucciones: [],
-            tiempo: tiempo || '30 min',
-            modo: modo || 'Medio',
-            imagen,
+            titulo: titulo,
+            descripcion: descripcion,
+            ingredientes: ingredientes.split(',').map(i => i.trim()),
+            instrucciones: [descripcion],
+            tiempo: tiempo,
+            modo: nivel,
+            imagen: foto,
         };
 
         saveRecipe(newRecipe, userEmail);
-        Alert.alert('Éxito', 'Receta guardada', [
+        Alert.alert('Éxito', 'Receta guardada correctamente', [
             { text: 'OK', onPress: () => navigation.goBack() }
         ]);
     };
@@ -105,77 +74,84 @@ export default function AddRecipeScreen({ navigation, route }) {
     return (
         <View style={styles.container}>
             <SafeAreaView style={styles.safeArea}>
-                {/* Logo */}
-                <View style={styles.logoContainer}>
-                    <View style={styles.logo}>
-                        <Text style={styles.logoEmoji}>🍳</Text>
-                    </View>
-                </View>
-
                 <ScrollView showsVerticalScrollIndicator={false}>
-                    {/* Card beige */}
-                    <View style={styles.card}>
-                        <Text style={styles.cardTitle}>Agregar Receta</Text>
+                    {/* Logo */}
+                    <View style={styles.logoContainer}>
+                        <Pressable onPress={() => navigation.goBack()}>
+                            <Image
+                                source={require('../../assets/logo.png')}
+                                style={styles.logo}
+                                resizeMode="contain"
+                            />
+                        </Pressable>
+                    </View>
 
-                        <Text style={styles.label}>Título</Text>
+                    {/* Título "Agregar Receta" - Beige claro */}
+                    <Text style={styles.mainTitle}>Agregar Receta</Text>
+
+                    {/* Card del formulario */}
+                    <View style={styles.formCard}>
+                        {/* Titulo */}
+                        <Text style={styles.label}>Titulo</Text>
                         <TextInput
                             style={styles.input}
-                            placeholderTextColor={Colors.textMuted}
                             value={titulo}
                             onChangeText={setTitulo}
                         />
 
-                        <Text style={styles.label}>Descripción</Text>
+                        {/* Descripcion */}
+                        <Text style={styles.label}>Descripcion</Text>
                         <TextInput
                             style={styles.input}
-                            placeholderTextColor={Colors.textMuted}
                             value={descripcion}
                             onChangeText={setDescripcion}
                         />
 
+                        {/* Ingredientes */}
                         <Text style={styles.label}>Ingredientes</Text>
                         <TextInput
-                            style={[styles.input, styles.textArea]}
-                            placeholderTextColor={Colors.textMuted}
-                            multiline
-                            textAlignVertical="top"
+                            style={styles.input}
                             value={ingredientes}
                             onChangeText={setIngredientes}
                         />
 
+                        {/* Tiempo */}
                         <Text style={styles.label}>Tiempo</Text>
                         <TextInput
                             style={styles.input}
-                            placeholderTextColor={Colors.textMuted}
                             value={tiempo}
                             onChangeText={setTiempo}
                         />
 
-                        <Text style={styles.label}>Modo</Text>
+                        {/* Nivel */}
+                        <Text style={styles.label}>Nivel</Text>
                         <TextInput
                             style={styles.input}
-                            placeholderTextColor={Colors.textMuted}
-                            value={modo}
-                            onChangeText={setModo}
+                            value={nivel}
+                            onChangeText={setNivel}
                         />
 
-                        {/* Subir foto */}
-                        <Pressable style={styles.photoButton} onPress={showImageOptions}>
-                            {imagen ? (
-                                <Image source={{ uri: imagen }} style={styles.previewImage} />
-                            ) : (
-                                <>
-                                    <Text style={styles.photoIcon}>📷</Text>
-                                    <Text style={styles.photoText}>Subir foto</Text>
-                                </>
-                            )}
-                        </Pressable>
+                        {/* Subir foto - DENTRO del card */}
+                        <View style={styles.subirFotoContainer}>
+                            <Text style={styles.subirFotoText}>Subir foto</Text>
+                            <Pressable style={styles.cameraButton} onPress={pickImage}>
+                                <Image
+                                    source={require('../../assets/camera_icon.png')}
+                                    style={styles.cameraIcon}
+                                    resizeMode="contain"
+                                />
+                            </Pressable>
+                        </View>
 
-                        {/* Botón Guardar */}
-                        <Pressable style={styles.saveButton} onPress={handleSave}>
-                            <Text style={styles.saveButtonText}>Guardar Receta</Text>
-                        </Pressable>
+                        {foto && (
+                            <Image source={{ uri: foto }} style={styles.previewImage} />
+                        )}
                     </View>
+
+                    {/* Botón Guardar Receta - Fondo DORADO, texto MARRÓN */}
+                    <Pressable style={styles.guardarButton} onPress={handleGuardar}>
+                        <Text style={styles.guardarText}>Guardar Receta</Text>
+                    </Pressable>
                 </ScrollView>
             </SafeAreaView>
         </View>
@@ -191,86 +167,83 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     logoContainer: {
-        alignItems: 'center',
-        paddingVertical: 14,
+        paddingHorizontal: 20,
+        paddingTop: 16,
     },
     logo: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        backgroundColor: Colors.cardBg,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 2,
-        borderColor: '#FFFFFF',
+        width: 70,
+        height: 70,
+        borderRadius: 35,
     },
-    logoEmoji: {
-        fontSize: 26,
+    mainTitle: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: '#FFFFFF',  // Blanco
+        textAlign: 'center',
+        marginVertical: 20,
+        fontStyle: 'italic',
     },
-    card: {
+    formCard: {
         backgroundColor: Colors.cardBg,
         marginHorizontal: 20,
-        marginBottom: 30,
-        borderRadius: 20,
-        padding: 20,
-    },
-    cardTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: Colors.textDark,
-        marginBottom: 14,
+        borderRadius: 26,
+        paddingVertical: 24,
+        paddingHorizontal: 24,
+        marginBottom: 20,
     },
     label: {
         color: Colors.textDark,
-        fontSize: 14,
+        fontSize: 16,
         fontWeight: 'bold',
-        marginBottom: 6,
-        marginTop: 12,
+        marginBottom: 8,
     },
     input: {
         backgroundColor: Colors.inputBg,
-        borderRadius: 20,
-        paddingHorizontal: 16,
-        paddingVertical: 14,
+        borderRadius: 0,
+        paddingHorizontal: 12,
+        paddingVertical: 10,
         fontSize: 14,
-        color: Colors.textLight,
+        color: Colors.textDark,
+        marginBottom: 20,
+        borderBottomWidth: 2,
+        borderBottomColor: Colors.textDark,
     },
-    textArea: {
-        minHeight: 80,
-        paddingTop: 14,
-    },
-    photoButton: {
-        backgroundColor: Colors.inputBg,
-        borderRadius: 20,
-        height: 100,
-        marginTop: 14,
-        justifyContent: 'center',
+    subirFotoContainer: {
         alignItems: 'center',
-        overflow: 'hidden',
+        marginTop: 20,
+        marginBottom: 10,
     },
-    photoIcon: {
-        fontSize: 30,
+    subirFotoText: {
+        color: Colors.textDark,
+        fontSize: 16,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom: 12,
     },
-    photoText: {
-        color: Colors.textLight,
-        fontSize: 13,
-        marginTop: 4,
+    cameraButton: {
+        alignSelf: 'center',
+    },
+    cameraIcon: {
+        width: 50,
+        height: 40,
     },
     previewImage: {
         width: '100%',
-        height: '100%',
-        resizeMode: 'cover',
+        height: 120,
+        borderRadius: 12,
+        marginTop: 10,
     },
-    saveButton: {
-        backgroundColor: Colors.inputBg,
+    guardarButton: {
+        backgroundColor: Colors.titleGold,  // Fondo DORADO
+        marginHorizontal: 50,
         borderRadius: 25,
-        paddingVertical: 14,
+        paddingVertical: 16,
         alignItems: 'center',
-        marginTop: 20,
+        marginBottom: 30,
     },
-    saveButtonText: {
-        color: Colors.textLight,
-        fontSize: 15,
+    guardarText: {
+        color: Colors.textDark,  // Texto MARRÓN
+        fontSize: 18,
         fontWeight: 'bold',
     },
 });

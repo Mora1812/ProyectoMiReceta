@@ -14,29 +14,22 @@ const sampleRecipes = [
         titulo: 'Bandeja paisa',
         descripcion: 'Plato típico colombiano con frijoles, arroz, carne molida, chicharrón, huevo frito, arepa, aguacate y plátano maduro.',
         ingredientes: [
-            '1 taza de frijoles',
-            '1 taza de arroz blanco',
-            '200g de carne molida',
-            '100g de chicharrón',
-            '1 huevo',
-            '1 arepa',
-            '1 aguacate',
-            '1 plátano maduro'
+            'Frijoles',
+            'Arroz',
+            'Carne molida',
+            'Chicharrón',
+            'Huevo frito',
+            'Chorizo',
+            'Plátano maduro',
+            'Aguacate',
+            'Arepa'
         ],
-        instrucciones: [
-            'Cocinar los frijoles hasta que estén tiernos',
-            'Preparar el arroz blanco',
-            'Freír la carne molida con condimentos',
-            'Freír el chicharrón hasta que esté crujiente',
-            'Freír el huevo',
-            'Asar la arepa',
-            'Freír el plátano maduro',
-            'Servir todo en un plato grande'
-        ],
-        tiempo: '1:30 min',
+        instrucciones: 'Cocina los frijoles con verduras para espesar; prepara el hogao (tomate y cebolla); fríe el chicharrón, los chorizos, y la carne molida con hogao. Fríe el huevo y las tajadas de plátano, y luego sirve todos los componentes junto al arroz, aguacate y arepa en una sola bandeja.',
+        tiempo: '60 min',
         modo: 'Medio',
-        imagen: null,
+        imagen: 'bandeja_paisa', // Referencia a asset
         usuarioId: 'demo@email.com',
+        rating: 5,
         favoritos: []
     },
     {
@@ -44,26 +37,63 @@ const sampleRecipes = [
         titulo: 'Ajiaco Santafereño',
         descripcion: 'Sopa tradicional bogotana con tres tipos de papa, pollo y guascas.',
         ingredientes: [
-            '1 pollo entero',
-            '500g papa criolla',
-            '500g papa pastusa',
-            '500g papa sabanera',
-            '2 mazorcas',
-            'Guascas al gusto',
+            'Pollo entero',
+            'Papa criolla',
+            'Papa pastusa',
+            'Papa sabanera',
+            'Mazorcas',
+            'Guascas',
             'Alcaparras',
             'Crema de leche'
         ],
-        instrucciones: [
-            'Cocinar el pollo en agua con sal',
-            'Agregar las papas en orden según su cocción',
-            'Añadir las mazorcas',
-            'Agregar las guascas al final',
-            'Servir con crema, alcaparras y aguacate'
-        ],
-        tiempo: '2:00 min',
+        instrucciones: 'Cocinar el pollo en agua con sal. Agregar las papas en orden según su cocción. Añadir las mazorcas. Agregar las guascas al final. Servir con crema, alcaparras y aguacate.',
+        tiempo: '2 horas',
         modo: 'Medio',
-        imagen: null,
+        imagen: 'pollo',  // Usar imagen de pollo
         usuarioId: 'demo@email.com',
+        rating: 4,
+        favoritos: []
+    },
+    // ===== RECETAS DE EJEMPLO PARA EL USUARIO "MARIA" =====
+    {
+        id: 3,
+        titulo: 'Tacos Mexicanos',
+        descripcion: 'Deliciosos tacos caseros con carne sazonada, cilantro y cebolla.',
+        ingredientes: [
+            'Tortillas de maíz',
+            'Carne de res',
+            'Cebolla',
+            'Cilantro',
+            'Limón',
+            'Salsa verde',
+            'Aguacate'
+        ],
+        instrucciones: 'Cocina la carne con especias mexicanas. Calienta las tortillas en comal. Sirve la carne en las tortillas con cebolla, cilantro, salsa y limón al gusto.',
+        tiempo: '30 min',
+        modo: 'facil',
+        imagen: 'tacos', // Referencia a asset
+        usuarioId: 'maria@email.com',
+        rating: 4,
+        favoritos: []
+    },
+    {
+        id: 4,
+        titulo: 'Postre de Chocolate',
+        descripcion: 'Delicioso postre de chocolate cremoso para cualquier ocasión.',
+        ingredientes: [
+            'Chocolate oscuro',
+            'Crema de leche',
+            'Azúcar',
+            'Huevos',
+            'Mantequilla',
+            'Galletas'
+        ],
+        instrucciones: 'Derrite el chocolate con la mantequilla. Mezcla con la crema y los huevos batidos. Añade azúcar al gusto. Vierte sobre base de galletas. Refrigera por 4 horas.',
+        tiempo: '4 horas',
+        modo: 'Medio',
+        imagen: 'postres', // Referencia a asset
+        usuarioId: 'maria@email.com',
+        rating: 5,
         favoritos: []
     }
 ];
