@@ -17,7 +17,7 @@ import {
   Pressable,
   Alert
 } from 'react-native';
-import { getRecipeById, isFavorite, toggleFavorite, deleteRecipe } from '../data/RecipesDB';
+import { getRecipeById, deleteRecipe } from '../data/RecipesDB';
 
 /**
  * BLOQUE: COLORES
@@ -65,31 +65,7 @@ const getImageSource = (imagen) => {
 export default function RecipeDetailScreen({ navigation, route }) {
   const { recipeId, userEmail, userName } = route.params || { recipeId: 1, userEmail: '', userName: 'Usuario' };
 
-  // Estado para manejar favoritos
-  const [isFav, setIsFav] = useState(false);
 
-  /**
-   * BLOQUE: FAVORITOS
-   * Verifica estado inicial y maneja el toggle.
-   */
-  // Verificar si la receta es favorita al cargar
-  /*
-  useEffect(() => {
-    if (userEmail && recipeId) {
-      setIsFav(isFavorite(recipeId, userEmail));
-    }
-  }, [recipeId, userEmail]);
-  */
-
-  // Función para alternar favorito
-  const handleToggleFavorite = () => {
-    // Funcionalidad deshabilitada temporalmente
-    // if (userEmail) {
-    //   toggleFavorite(recipeId, userEmail);
-    //   setIsFav(!isFav);
-    // }
-    Alert.alert("Información", "La funcionalidad de favoritos está deshabilitada temporalmente.");
-  };
 
   /**
    * BLOQUE: ACCIONES
@@ -192,13 +168,12 @@ export default function RecipeDetailScreen({ navigation, route }) {
                   ))}
                 </View>
               </View>
+              {/* Botón de corazón estático (sin funcionalidad) */}
               <Pressable
-                style={[styles.heartButton, !isFav && styles.heartButtonOutline]}
-                onPress={handleToggleFavorite}
+                style={[styles.heartButton, styles.heartButtonOutline]}
+                onPress={() => { }}
               >
-                <Text style={[styles.heartIcon, !isFav && styles.heartIconOutline]}>
-                  {isFav ? '♥' : '♡'}
-                </Text>
+                <Text style={[styles.heartIcon, styles.heartIconOutline]}>♡</Text>
               </Pressable>
             </View>
 

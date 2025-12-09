@@ -66,7 +66,7 @@ export default function PrivateScreen({ navigation, route }) {
     const [userRecipes, setUserRecipes] = useState([]);
 
     // Tabs de navegación del perfil
-    const tabs = ['Me gusta', 'Favoritos', 'Subir receta', 'Ver receta'];
+    const tabs = ['Me gusta', 'Subir receta', 'Ver receta'];
 
     /**
      * BLOQUE: CARGA DE DATOS
