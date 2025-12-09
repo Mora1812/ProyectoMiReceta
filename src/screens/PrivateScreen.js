@@ -4,6 +4,9 @@
 // Basado en el estilo del profesor - WelcomeScreen.js
 // ==================================================
 
+/**
+ * BLOQUE: IMPORTS
+ */
 import React, { useState, useEffect } from 'react';
 import {
     View,
@@ -16,9 +19,10 @@ import {
 } from 'react-native';
 import { getRecipesByUser } from '../data/RecipesDB';
 
-// ==================================================
+/**
+ * BLOQUE: COLORES
+ */
 // COLORES - Paleta de colores del Figma
-// ==================================================
 const Colors = {
     background: '#452121',  // Marrón oscuro - Fondo principal
     cardBg: '#F7F7F1',      // Beige claro - Fondo de cards
@@ -26,9 +30,11 @@ const Colors = {
     textDark: '#452121',    // Marrón oscuro - Texto
 };
 
-// ==================================================
+/**
+ * BLOQUE: DATOS DE EJEMPLO
+ * Se muestran si el usuario no tiene recetas creadas todavía.
+ */
 // DATOS - Recetas de ejemplo (si el usuario no tiene)
-// ==================================================
 const defaultRecipes = [
     {
         id: 1,
@@ -46,9 +52,11 @@ const defaultRecipes = [
     },
 ];
 
-// ==================================================
+/**
+ * BLOQUE: COMPONENTE PRIVATE SCREEN
+ * Muestra el perfil del usuario, opciones de navegación y sus recetas.
+ */
 // COMPONENTE PRINCIPAL - PrivateScreen
-// ==================================================
 export default function PrivateScreen({ navigation, route }) {
     // Obtener datos del usuario desde la navegación
     const { userName, userEmail } = route.params || { userName: 'Usuario', userEmail: '' };
@@ -60,6 +68,10 @@ export default function PrivateScreen({ navigation, route }) {
     // Tabs de navegación del perfil
     const tabs = ['Me gusta', 'Favoritos', 'Subir receta', 'Ver receta'];
 
+    /**
+     * BLOQUE: CARGA DE DATOS
+     * Carga las recetas asociadas al email del usuario.
+     */
     // Cargar recetas del usuario al entrar
     useEffect(() => {
         loadUserRecipes();
@@ -84,6 +96,10 @@ export default function PrivateScreen({ navigation, route }) {
         }
     };
 
+    /**
+     * BLOQUE: MANEJO DE TABS
+     * Navegación interna o externa (Subir receta).
+     */
     // Manejar cambio de tab
     const handleTabPress = (tab) => {
         setActiveTab(tab);
@@ -152,7 +168,8 @@ export default function PrivateScreen({ navigation, route }) {
                                 style={styles.recipeCard}
                                 onPress={() => navigation.navigate('RecipeDetail', {
                                     recipeId: recipe.id,
-                                    userEmail
+                                    userEmail,
+                                    userName
                                 })}
                             >
                                 {/* Imagen */}

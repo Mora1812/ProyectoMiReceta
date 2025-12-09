@@ -4,6 +4,10 @@
 // Basado en el estilo del profesor - WelcomeScreen.js
 // ==================================================
 
+/**
+ * BLOQUE: IMPORTS
+ * Dependencias visuales de React Native y acceso a recetas.
+ */
 import React, { useState, useEffect } from 'react';
 import {
     View,
@@ -17,9 +21,10 @@ import {
 } from 'react-native';
 import { getAllRecipes } from '../data/RecipesDB';
 
-// ==================================================
+/**
+ * BLOQUE: CONFIGURACIÓN DE COLORES
+ */
 // COLORES - Paleta de colores del Figma
-// ==================================================
 const Colors = {
     background: '#452121',  // Marrón oscuro - Fondo principal
     cardBg: '#F7F7F1',      // Beige claro - Fondo de cards
@@ -29,9 +34,11 @@ const Colors = {
     textMuted: '#888888',   // Gris - Placeholder
 };
 
-// ==================================================
-// DATOS - Categorías de recetas (círculos)
-// ==================================================
+/**
+ * BLOQUE: DATOS ESTÁTICOS
+ * Categorías y recetas destacadas por defecto.
+ */
+// Categorías de recetas (círculos)
 const categories = [
     { id: 1, name: 'Recetas\ncon pollo', image: require('../../assets/pollo.png') },
     { id: 2, name: 'Recetas con\ncarne de res', image: require('../../assets/carne_res.png') },
@@ -39,9 +46,7 @@ const categories = [
     { id: 4, name: 'Recetas para\npostres', image: require('../../assets/postres.png') },
 ];
 
-// ==================================================
-// DATOS - Recetas destacadas (cards principales)
-// ==================================================
+// Recetas destacadas (cards principales)
 const featuredRecipes = [
     {
         id: 1,
@@ -57,9 +62,10 @@ const featuredRecipes = [
     },
 ];
 
-// ==================================================
-// COMPONENTE PRINCIPAL - HomeScreen
-// ==================================================
+/**
+ * BLOQUE: COMPONENTE HOMESCREEN
+ * Pantalla principal donde se listan todas las recetas y categorías.
+ */
 export default function HomeScreen({ navigation, route }) {
     // Obtener datos del usuario desde la navegación
     const { userName, userEmail } = route.params || { userName: 'Usuario', userEmail: '' };
@@ -69,6 +75,10 @@ export default function HomeScreen({ navigation, route }) {
     const [activeTab, setActiveTab] = useState('Recetas'); // Tab activo
     const [recipes, setRecipes] = useState(featuredRecipes); // Recetas a mostrar
 
+    /**
+     * BLOQUE: CARGA DE RECETAS
+     * Se ejecuta al montar y al recibir foco para actualizar la lista.
+     */
     // Cargar recetas de la base de datos
     useEffect(() => {
         loadRecipes();
@@ -113,6 +123,10 @@ export default function HomeScreen({ navigation, route }) {
         }
     };
 
+    /**
+     * BLOQUE: FILTRADO
+     * Filtra la lista según el texto de búsqueda.
+     */
     // Filtrar recetas según búsqueda
     const filteredRecipes = recipes.filter(recipe =>
         recipe.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -189,7 +203,7 @@ export default function HomeScreen({ navigation, route }) {
                             <Pressable
                                 key={recipe.id}
                                 style={styles.recipeCard}
-                                onPress={() => navigation.navigate('RecipeDetail', { recipeId: recipe.id, userEmail })}
+                                onPress={() => navigation.navigate('RecipeDetail', { recipeId: recipe.id, userEmail, userName })}
                             >
                                 {/* Imagen de la receta */}
                                 <View style={styles.recipeImageContainer}>
@@ -220,9 +234,9 @@ export default function HomeScreen({ navigation, route }) {
     );
 }
 
-// ==================================================
-// ESTILOS - StyleSheet
-// ==================================================
+/**
+ * BLOQUE: ESTILOS
+ */
 const styles = StyleSheet.create({
     // ----- CONTENEDOR PRINCIPAL -----
     container: {

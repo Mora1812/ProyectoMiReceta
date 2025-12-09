@@ -1,14 +1,22 @@
+// ==================================================
 // src/data/UsersDB.js
 // Base de datos de usuarios en memoria
+// ==================================================
 
+/**
+ * BLOQUE: ALMACÉN DE USUARIOS
+ * Diccionario para almacenar usuarios por correo electrónico.
+ * Clave: correo, Valor: objeto usuario (nombre, correo, password).
+ */
 // Este será nuestro "diccionario" de usuarios en memoria
-// clave: correo, valor: objeto con nombre, correo y password
 const users = {};
 
 /**
- * Guarda un usuario nuevo.
- * Si el correo ya existe, devuelve false.
+ * BLOQUE: GESTIÓN DE USUARIOS
+ * Funciones para registrar y autenticar usuarios.
  */
+
+// Guarda un usuario nuevo
 export function saveUser(nombre, correo, password) {
     if (users[correo]) {
         // ya existe un usuario con ese correo
@@ -21,10 +29,7 @@ export function saveUser(nombre, correo, password) {
 
 /**
  * Valida un usuario al hacer login.
- * Devuelve:
- *  1- { ok: true, user } si está bien
- *  2- { ok: false, reason: 'not_found' } si no existe
- *  3 - { ok: false, reason: 'wrong_password' } si la contraseña no coincide
+ * Retorna objeto con estado { ok, reason, user }
  */
 export function validateUser(correo, password) {
     const user = users[correo];
@@ -40,9 +45,7 @@ export function validateUser(correo, password) {
     return { ok: true, user };
 }
 
-/**
- * Obtener un usuario por correo
- */
+// Obtener un usuario por correo
 export function getUserByEmail(correo) {
     return users[correo] || null;
 }

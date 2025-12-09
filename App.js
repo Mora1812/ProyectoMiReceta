@@ -7,15 +7,19 @@
 // 3. CRUD de recetas (Crear, Leer, Actualizar, Eliminar)
 // ==================================================
 
+/**
+ * BLOQUE: IMPORTS
+ * - NavigationContainer: Contenedor principal de navegación.
+ * - createNativeStackNavigator: Gestor de pila para pantallas.
+ */
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-// ==================================================
-// PANTALLAS DEL PROYECTO
-// ==================================================
-
+/**
+ * BLOQUE: IMPORTS DE PANTALLAS
+ */
 // Vista pública (antes de login)
 import WelcomeScreen from './src/screens/WelcomeScreen';
 
@@ -33,19 +37,25 @@ import RecipeDetailScreen from './src/screens/RecipeDetailScreen'; // READ
 import EditRecipeScreen from './src/screens/EditRecipeScreen';     // UPDATE
 import DeleteRecipeScreen from './src/screens/DeleteRecipeScreen'; // DELETE
 
-// ==================================================
+/**
+ * BLOQUE: CONFIGURACIÓN
+ * - Colors: Colores globales para el navegador.
+ * - Stack: Instancia del navegador.
+ */
 // COLORES
-// ==================================================
 const Colors = {
   background: '#452121',   // Marrón - Fondo principal
   cardBg: '#F7F7F1',       // Beige - Cards
 };
 
-// ==================================================
 // NAVEGACIÓN
-// ==================================================
 const Stack = createNativeStackNavigator();
 
+/**
+ * BLOQUE: COMPONENTE APP
+ * Define la estructura de navegación de toda la aplicación.
+ * initialRouteName="Welcome": Inicia en la pantalla de bienvenida.
+ */
 export default function App() {
   return (
     <NavigationContainer>

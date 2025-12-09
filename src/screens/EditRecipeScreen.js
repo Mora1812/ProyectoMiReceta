@@ -3,6 +3,9 @@
 // Pantalla "Editar Receta" - ESTILOS IGUALES a AddRecipeScreen
 // ==================================================
 
+/**
+ * BLOQUE: IMPORTS
+ */
 import React, { useState, useEffect } from 'react';
 import {
     View,
@@ -18,6 +21,9 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { getRecipeById, updateRecipe } from '../data/RecipesDB';
 
+/**
+ * BLOQUE: COLORES
+ */
 // COLORES - Mismos que AddRecipeScreen
 const Colors = {
     background: '#452121',
@@ -28,6 +34,10 @@ const Colors = {
     textDark: '#452121',
 };
 
+/**
+ * BLOQUE: COMPONENTE EDIT RECIPE
+ * Permite modificar una receta existente. Pre-carga los datos.
+ */
 export default function EditRecipeScreen({ navigation, route }) {
     const { recipeId } = route.params;
 
@@ -39,6 +49,10 @@ export default function EditRecipeScreen({ navigation, route }) {
     const [nivel, setNivel] = useState('');
     const [foto, setFoto] = useState(null);
 
+    /**
+     * BLOQUE: CARGA INICIAL
+     * Obtiene los datos de la receta por ID y rellena los estados.
+     */
     // Cargar datos de la receta al iniciar
     useEffect(() => {
         loadRecipe();
@@ -56,6 +70,9 @@ export default function EditRecipeScreen({ navigation, route }) {
         }
     };
 
+    /**
+     * BLOQUE: SELECCIÓN IMAGEN
+     */
     // Seleccionar imagen
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -70,6 +87,10 @@ export default function EditRecipeScreen({ navigation, route }) {
         }
     };
 
+    /**
+     * BLOQUE: ACTUALIZAR
+     * Guarda los cambios en la receta.
+     */
     // Guardar cambios
     const handleGuardar = () => {
         if (!titulo.trim()) {

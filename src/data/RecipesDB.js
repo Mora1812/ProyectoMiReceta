@@ -1,5 +1,13 @@
+// ==================================================
 // src/data/RecipesDB.js
 // Base de datos en memoria para las recetas
+// ==================================================
+
+/**
+ * BLOQUE: VARIABLES GLOBALES
+ * - recipeIdCounter: Autoincremental para IDs.
+ * - recipes: Objeto principal que almacena las recetas.
+ */
 
 // Contador para generar IDs únicos
 let recipeIdCounter = 1;
@@ -7,6 +15,10 @@ let recipeIdCounter = 1;
 // Almacén de recetas: { id: recipeObject }
 const recipes = {};
 
+/**
+ * BLOQUE: DATOS DE EJEMPLO
+ * Recetas precargadas para demostración.
+ */
 // Recetas de ejemplo para mostrar en la app
 const sampleRecipes = [
     {
@@ -98,12 +110,20 @@ const sampleRecipes = [
     }
 ];
 
+/**
+ * BLOQUE: INICIALIZACIÓN
+ * Carga los datos de ejemplo en el objeto principal.
+ */
 // Inicializar con recetas de ejemplo
 sampleRecipes.forEach(recipe => {
     recipes[recipe.id] = recipe;
     recipeIdCounter = Math.max(recipeIdCounter, recipe.id + 1);
 });
 
+/**
+ * BLOQUE: FUNCIONES DE LECTURA (READ)
+ * Métodos para obtener datos de la "base de datos".
+ */
 /**
  * Obtener todas las recetas
  */
@@ -125,6 +145,10 @@ export function getRecipesByUser(usuarioId) {
     return Object.values(recipes).filter(r => r.usuarioId === usuarioId);
 }
 
+/**
+ * BLOQUE: FUNCIONES DE ESCRITURA (CREATE, UPDATE, DELETE)
+ * Métodos para modificar los datos.
+ */
 /**
  * Guardar una nueva receta
  */
@@ -165,6 +189,10 @@ export function deleteRecipe(id) {
     return true;
 }
 
+/**
+ * BLOQUE: FAVORITOS Y BÚSQUEDA
+ * Funcionalidades adicionales.
+ */
 /**
  * Agregar/quitar de favoritos
  */

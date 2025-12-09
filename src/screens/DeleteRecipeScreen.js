@@ -4,6 +4,9 @@
 // Estilo basado en el Figma
 // ==================================================
 
+/**
+ * BLOQUE: IMPORTS
+ */
 import React from 'react';
 import {
     View,
@@ -16,6 +19,9 @@ import {
 } from 'react-native';
 import { deleteRecipe } from '../data/RecipesDB';
 
+/**
+ * BLOQUE: COLORES
+ */
 // ==================================================
 // COLORES
 // ==================================================
@@ -27,18 +33,26 @@ const Colors = {
     buttonGold: '#D4AD58',  // Botón dorado
 };
 
+/**
+ * BLOQUE: COMPONENTE DELETE
+ * Confirmación antes de borrar permanentemente.
+ */
 // ==================================================
 // COMPONENTE PRINCIPAL
 // ==================================================
 export default function DeleteRecipeScreen({ navigation, route }) {
-    // Obtener el ID de la receta a eliminar
-    const { recipeId } = route.params;
+    // Obtener el ID de la receta a eliminar y datos de usuario
+    const { recipeId, userEmail, userName } = route.params;
 
+    /**
+     * BLOQUE: ELIMINACIÓN
+     * Llama a la DB para borrar y navega al perfil.
+     */
     // Función para eliminar la receta
     const handleDelete = () => {
         deleteRecipe(recipeId);
         Alert.alert('Receta eliminada', 'La receta fue eliminada correctamente', [
-            { text: 'OK', onPress: () => navigation.navigate('Private') }
+            { text: 'OK', onPress: () => navigation.navigate('Private', { userEmail, userName }) }
         ]);
     };
 

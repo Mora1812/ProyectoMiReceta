@@ -1,5 +1,12 @@
+// ==================================================
 // src/screens/AddRecipeScreen.js
 // Vista "Agregar Receta" - ESTILOS EXACTOS del Figma
+// ==================================================
+
+/**
+ * BLOQUE: IMPORTS
+ * - ImagePicker: Librería para seleccionar imágenes de la galería.
+ */
 import React, { useState } from 'react';
 import {
     View,
@@ -15,6 +22,10 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { saveRecipe } from '../data/RecipesDB';
 
+/**
+ * BLOQUE: COLORES
+ * Colores específicos para mantener consistencia con el diseño "beige/café".
+ */
 // COLORES EXACTOS del Figma
 const Colors = {
     background: '#452121',
@@ -26,9 +37,14 @@ const Colors = {
     buttonBg: '#5C3A2E',     // Marrón para botón
 };
 
+/**
+ * BLOQUE: COMPONENTE ADD RECIPE
+ * Formulario para crear una nueva receta.
+ */
 export default function AddRecipeScreen({ navigation, route }) {
     const { userName, userEmail } = route.params || { userName: 'Usuario', userEmail: '' };
 
+    // Estados para cada campo del formulario
     const [titulo, setTitulo] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [ingredientes, setIngredientes] = useState('');
@@ -36,6 +52,10 @@ export default function AddRecipeScreen({ navigation, route }) {
     const [nivel, setNivel] = useState('');
     const [foto, setFoto] = useState(null);
 
+    /**
+     * BLOQUE: SELECCIÓN DE IMAGEN
+     * Abre la galería del dispositivo para elegir una foto.
+     */
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -49,6 +69,10 @@ export default function AddRecipeScreen({ navigation, route }) {
         }
     };
 
+    /**
+     * BLOQUE: GUARDAR RECETA
+     * Valida y guarda la receta en la "base de datos" local.
+     */
     const handleGuardar = () => {
         if (!titulo.trim()) {
             Alert.alert('Error', 'Por favor ingresa un título');
@@ -65,6 +89,7 @@ export default function AddRecipeScreen({ navigation, route }) {
             imagen: foto,
         };
 
+        // Guardar asociando al email del usuario actual
         saveRecipe(newRecipe, userEmail);
         Alert.alert('Éxito', 'Receta guardada correctamente', [
             { text: 'OK', onPress: () => navigation.goBack() }

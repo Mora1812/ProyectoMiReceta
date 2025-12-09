@@ -1,0 +1,47 @@
+RESUMEN DE CÓDIGO CLAVE - MI RECETA APP
+=========================================
+
+1. NAVEGACIÓN PRINCIPAL (App.js)
+-----------------------------------------
+El archivo `App.js` es el corazón de la navegación. Usamos `NativeStackNavigator` para gestionar el flujo entre pantallas.
+- `NavigationContainer`: Envuelve toda la app.
+- `Stack.Navigator`: Define las rutas (Welcome, Login, Home, Private, etc.).
+- `initialRouteName="Welcome"`: Define que la primera pantalla es la de bienvenida.
+
+IMPORTANTE: Aquí se configuran los `screenOptions` para ocultar el header por defecto (`headerShown: false`) y mantener el estilo limpio.
+
+2. LÓGICA DE DATOS (src/data/)
+-----------------------------------------
+Usamos bases de datos simuladas en memoria (arrays y objetos) para evitar configuraciones complejas de backend por ahora.
+
+A. RECETAS (RecipesDB.js)
+   - `getAllRecipes()`: Devuelve todas las recetas para el Home.
+   - `getRecipesByUser(email)`: Filtra recetas específicas para el Perfil (PrivateScreen).
+   - `saveRecipe(...)`: Crea una receta nueva asignándole un ID único.
+
+B. USUARIOS (UsersDB.js)
+   - `validateUser(correo, pass)`: Verifica si las credenciales coinciden. Retorna un objeto con estado `{ok: boolean}`.
+   - `saveUser(...)`: Registra nuevos usuarios verificando que el correo no exista ya.
+
+3. VISTA PRINCIPAL (HomeScreen.js)
+-----------------------------------------
+Es la pantalla donde aterriza el usuario después del login.
+- `useEffect`: Se usa para cargar las recetas (`loadRecipes`) cada vez que la pantalla gana el foco (navigation listener), asegurando que si agregas una receta y vuelves, la lista se actualice.
+- `filteredRecipes`: Implementa la lógica del buscador filtrando el array de `recipes` basado en el texto del `searchQuery`.
+
+4. VISTA PRIVADA / PERFIL (PrivateScreen.js)
+-----------------------------------------
+Muestra las recetas propias del usuario logueado.
+- Recibe `userEmail` por parámetros de navegación.
+- Llama a `getRecipesByUser(userEmail)` para mostrar solo sus creaciones.
+- Maneja pestañas internas ("Me gusta", "Subir receta") para organizar la vista.
+
+5. CREACIÓN DE RECETAS (AddRecipeScreen.js)
+-----------------------------------------
+Formulario clave para el contenido.
+- Integra `expo-image-picker` para permitir al usuario seleccionar fotos de su galería.
+- Valida que al menos el título exista antes de guardar.
+- Llama a `saveRecipe` de la base de datos y luego regresa a la pantalla anterior.
+
+=========================================
+Este resumen cubre los flujos esenciales: Navegación -> Autenticación -> Visualización de Datos -> Creación de Contenido.

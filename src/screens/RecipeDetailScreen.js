@@ -1,5 +1,11 @@
+// ==================================================
 // src/screens/RecipeDetailScreen.js
 // Vista de Detalles de Receta - ESTILOS EXACTOS del Figma
+// ==================================================
+
+/**
+ * BLOQUE: IMPORTS
+ */
 import React, { useState, useEffect } from 'react';
 import {
   View,
@@ -13,6 +19,9 @@ import {
 } from 'react-native';
 import { getRecipeById, isFavorite, toggleFavorite, deleteRecipe } from '../data/RecipesDB';
 
+/**
+ * BLOQUE: COLORES
+ */
 // COLORES EXACTOS del Figma
 const Colors = {
   background: '#452121',
@@ -23,6 +32,10 @@ const Colors = {
   heartOutline: '#452121',
 };
 
+/**
+ * BLOQUE: UTILIDADES DE IMAGEN
+ * Funciones auxiliares para resolver rutas de imágenes locales o URIs.
+ */
 // Imágenes de assets disponibles
 const assetImages = {
   'bandeja_paisa': require('../../assets/bandeja_paisa.png'),
@@ -45,32 +58,49 @@ const getImageSource = (imagen) => {
   return imagen;
 };
 
+/**
+ * BLOQUE: COMPONENTE DETALLE
+ * Muestra información completa, maneja favoritos y opciones de edición/borrado.
+ */
 export default function RecipeDetailScreen({ navigation, route }) {
-  const { recipeId, userEmail } = route.params || { recipeId: 1, userEmail: '' };
+  const { recipeId, userEmail, userName } = route.params || { recipeId: 1, userEmail: '', userName: 'Usuario' };
 
   // Estado para manejar favoritos
   const [isFav, setIsFav] = useState(false);
 
+  /**
+   * BLOQUE: FAVORITOS
+   * Verifica estado inicial y maneja el toggle.
+   */
   // Verificar si la receta es favorita al cargar
+  /*
   useEffect(() => {
     if (userEmail && recipeId) {
       setIsFav(isFavorite(recipeId, userEmail));
     }
   }, [recipeId, userEmail]);
+  */
 
   // Función para alternar favorito
   const handleToggleFavorite = () => {
-    if (userEmail) {
-      toggleFavorite(recipeId, userEmail);
-      setIsFav(!isFav);
-    }
+    // Funcionalidad deshabilitada temporalmente
+    // if (userEmail) {
+    //   toggleFavorite(recipeId, userEmail);
+    //   setIsFav(!isFav);
+    // }
+    Alert.alert("Información", "La funcionalidad de favoritos está deshabilitada temporalmente.");
   };
 
-  // Función para ir a la pantalla de eliminar
-  const handleDelete = () => {
-    navigation.navigate('DeleteRecipe', { recipeId });
-  };
+  /**
+   * BLOQUE: ACCIONES
+   * Navegación para eliminar.
+   */
 
+
+  /**
+   * BLOQUE: OBTENCIÓN DE DATOS
+   * Recupera la receta por ID y prepara los datos para visualización.
+   */
   // Obtener la receta desde la base de datos real
   const recipeFromDB = getRecipeById(recipeId);
 
@@ -196,13 +226,13 @@ export default function RecipeDetailScreen({ navigation, route }) {
             <View style={styles.actionButtonsContainer}>
               <Pressable
                 style={styles.editButton}
-                onPress={() => navigation.navigate('EditRecipe', { recipeId, userEmail })}
+                onPress={() => navigation.navigate('EditRecipe', { recipeId, userEmail, userName })}
               >
                 <Text style={styles.editButtonText}>Editar</Text>
               </Pressable>
               <Pressable
                 style={styles.deleteButton}
-                onPress={handleDelete}
+                onPress={() => navigation.navigate('DeleteRecipe', { recipeId, userEmail, userName })}
               >
                 <Text style={styles.deleteButtonText}>Eliminar</Text>
               </Pressable>
